@@ -30,7 +30,7 @@
                 <h4>Login</h4>
               </div>
               <div class="card-body">
-                <form method="POST" action="login.php" class="needs-validation" novalidate="">
+                <form method="POST" action="signin.php" class="needs-validation" novalidate="">
                   <div class="form-group">
                     <label for="email">Email</label>
                     <input id="email" type="email" name="user_login_email" class="form-control" name="email" tabindex="1" required autofocus>

@@ -2962,7 +2962,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-8">
-                    <div class="bttxt">Copyright © 2025 JOBS PORTAL. All Rights Reserved. Design by: <a href="https://piratestechnologies.com/" target="_blank">Pirates Technologies</a></div>
+                    <div class="bttxt">Copyright © 2025 JOBS PORTAL. All Rights Reserved. Design by: <a href="https://piratestechnologies.com/" target="_blank">Javeria Noor </a></div>
                 </div>
                 <div class="col-md-4">
                     <div class="paylogos"><img src="https://www.sharjeelanjum.com/demos/jobsportal-update/images/payment-icons.png" alt=""></div>

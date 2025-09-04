@@ -484,70 +484,75 @@ include 'include/config.php'; // DB connection
     </div>
     <!-- modal for add projects -->
     <!-- Project Modal -->
-    <div class="modal fade" id="projectModal" tabindex="-1" aria-labelledby="projectModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+   
+    <div class="modal fade" id="projectModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
-                <form class="form" id="add_edit_profile_project" method="POST" action="save_project.php" enctype="multipart/form-data">
+                <form id="projectForm" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="project_id" id="project_id">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="projectModalLabel">Add Project</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <h4 class="modal-title">Add/Edit Project</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
-
                     <div class="modal-body">
-                        <input type="hidden" name="project_id" id="project_id">
-
-                        <!-- Project Name -->
-                        <div class="formrow pb-3">
-                            <input class="form-control p-3" id="name" placeholder="Project Name" name="name" type="text" required>
+                        <div class="form-group pb-3">
+                            <input type="text" name="title" id="title" class="form-control" placeholder="Project Title">
                         </div>
 
-                        <!-- Project Image -->
-                        <div class="formrow pb-3">
-                            <div class="uploadphotobx border border-dashed p-3 text-center rounded cursor-pointer" id="uploadBox">
+                        <div class="form-group pb-3">
+                            <div id="uploadBox" class="uploadphotobx border border-dashed p-3 text-center rounded cursor-pointer">
                                 <i class="fa fa-upload fa-2x mb-2"></i>
-                                <div id="uploadText">Click here to upload Project Image</div>
-                                <img id="previewImage" src="" alt="Preview" style="display:none; max-width:100%; margin-top:10px; border-radius:10px;" />
+                                <div id="uploadText">Click to upload Project Image</div>
+                                <img id="previewImage" src="" style="display:none; max-width:100%; margin-top:10px; border-radius:10px;">
                             </div>
                             <input type="file" name="image" id="imageInput" style="display:none;" accept="image/*">
                         </div>
 
-                        <!-- Project URL -->
-                        <div class="formrow pb-3">
-                            <input class="form-control p-3" id="url" placeholder="Project URL" name="url" type="text">
+                        <div class="form-group pb-3">
+                            <input type="text" name="url" id="url" class="form-control" placeholder="Project URL">
                         </div>
 
-                        <!-- Start Date -->
-                        <div class="formrow pb-3">
-                            <input class="form-control p-3 datepicker" id="date_start" placeholder="Project Start Date" name="date_start" type="date">
+                        <div class="form-group pb-3">
+                            <input type="text" name="start_date" id="start_date" class="form-control datepicker" placeholder="Start Date">
                         </div>
 
-                        <!-- End Date -->
-                        <div class="formrow pb-3">
-                            <input class="form-control p-3 datepicker" id="date_end" placeholder="Project End Date" name="date_end" type="date">
+                        <div class="form-group pb-3">
+                            <input type="text" name="end_date" id="end_date" class="form-control datepicker" placeholder="End Date">
                         </div>
 
-                        <!-- Ongoing Project -->
-                        <div class="formrow pb-3">
-                            <label class="bold">Is Currently Ongoing?</label>
-                            <div class="radio-list">
-                                <label class="me-3"><input type="radio" name="is_on_going" value="1"> Yes</label>
-                                <label><input type="radio" name="is_on_going" value="0" checked> No</label>
-                            </div>
-                        </div>
-
-                        <!-- Description -->
-                        <div class="formrow pb-3">
-                            <textarea name="description" class="form-control" id="description" placeholder="Project description"></textarea>
+                        <div class="form-group pb-3">
+                            <textarea name="description" id="description" class="form-control" placeholder="Project Description"></textarea>
                         </div>
                     </div>
-
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary w-100 fw-bold fs-6">Save Changes <i class="fa fa-arrow-circle-right"></i></button>
+                        <button type="button" class="btn btn-primary w-100" onclick="submitProjectForm();">Save Changes</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
+
+    <script>
+        const uploadBox = document.getElementById('uploadBox');
+        const imageInput = document.getElementById('imageInput');
+        const previewImage = document.getElementById('previewImage');
+        const uploadText = document.getElementById('uploadText');
+
+        uploadBox.addEventListener('click', () => imageInput.click());
+        imageInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    previewImage.src = e.target.result;
+                    previewImage.style.display = 'block';
+                    uploadText.style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+
 
     <!-- JS for Image Upload Preview -->
     <script>
@@ -2440,75 +2445,87 @@ include 'include/config.php'; // DB connection
         }
     </script>
     <!-- AJAX for project -->
-    <script>
-        function fetchProjects() {
-            $.get('fetch_projects.php', function(data) {
-                let projects = JSON.parse(data);
-                let html = '';
-
-                if (projects.length > 0) {
-                    projects.forEach(proj => {
-                        html += `
-                <tr class="d-flex flex-column">
-                    <td style="width:150px;" class="mb-5">
-                        <img src="uploads/${proj.image || 'default.jpg'}" alt="${proj.title}" style="max-width:120px;">
-                    </td>
-                    <td class="mt-3">
-                        <strong>${proj.title}</strong><br>
-                        <small>${proj.start_date} - ${proj.end_date}</small><br>
-                        ${proj.description}
-                    </td>
-                    <td style="width:120px;">
-                        <a href="javascript:void(0);" onclick="editProject(${proj.id})">Edit</a> |
-                        <a class="text-danger" href="javascript:void(0);" onclick="deleteProject(${proj.id})">Delete</a>
-                    </td>
-                </tr>`;
-                    });
-                } else {
-                    html = '<tr><td>No projects found.</td></tr>';
-                }
-
-                $('#projects_div tbody').html(html);
-            });
-        }
-
-        function saveProject(formData) {
-            $.ajax({
-                url: 'save_project.php',
-                type: 'POST',
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(response) {
-                    let res = JSON.parse(response);
-                    alert(res.message);
-                    $('#projectModal').modal('hide');
-                    fetchProjects();
-                }
-            });
-        }
-
-        function deleteProject(id) {
-            if (confirm("Are you sure you want to delete this project?")) {
-                $.post('delete_project.php', {
-                    id: id
-                }, function(response) {
-                    let res = JSON.parse(response);
-                    alert(res.message);
-                    fetchProjects();
-                });
-            }
-        }
-
-        $(document).ready(function() {
-            fetchProjects();
-            $('#projectForm').on('submit', function(e) {
-                e.preventDefault();
-                let formData = new FormData(this);
-                saveProject(formData);
-            });
+   <script>
+    // Fetch projects on page load
+function fetchProjects(){
+    $.get('fetch_projects.php', function(data){
+        const projects = JSON.parse(data);
+        let html = '';
+        projects.forEach(proj => {
+            html += `
+            <tr class="d-flex flex-column">
+                <td style="width:150px;" class="mb-3">
+                    <img src="uploads/${proj.image || 'default.jpg'}" style="max-width:120px;">
+                </td>
+                <td class="mt-3">
+                    <strong>${proj.title}</strong><br>
+                    <small>${proj.start_date} - ${proj.end_date}</small><br>
+                    ${proj.description}
+                </td>
+                <td style="width:120px;">
+                    <a href="javascript:void(0);" onclick="editProject(${proj.id})">Edit</a> |
+                    <a href="javascript:void(0);" class="text-danger" onclick="deleteProject(${proj.id})">Delete</a>
+                </td>
+            </tr>`;
         });
-    </script>
+        $('#projects_div table tbody').html(html);
+    });
+}
+
+// Open modal for editing
+function editProject(id){
+    $.get('fetch_projects.php', function(data){
+        const projects = JSON.parse(data);
+        const project = projects.find(p=>p.id==id);
+        if(project){
+            $('#project_id').val(project.id);
+            $('#title').val(project.title);
+            $('#url').val(project.url);
+            $('#start_date').val(project.start_date);
+            $('#end_date').val(project.end_date);
+            $('#description').val(project.description);
+            if(project.image){
+                previewImage.src = 'uploads/'+project.image;
+                previewImage.style.display='block';
+                uploadText.style.display='none';
+            }
+            $('#projectModal').modal('show');
+        } else { alert('Project not found!'); }
+    });
+}
+
+// Delete project
+function deleteProject(id){
+    if(confirm('Delete this project?')){
+        $.post('delete_project.php', {id:id}, function(resp){
+            fetchProjects();
+        });
+    }
+}
+
+// Submit project form
+function submitProjectForm(){
+    const formData = new FormData($('#projectForm')[0]);
+    $.ajax({
+        url: 'save_project.php',
+        type: 'POST',
+        data: formData,
+        contentType:false,
+        processData:false,
+        success:function(resp){
+            $('#projectModal').modal('hide');
+            $('#projectForm')[0].reset();
+            previewImage.style.display='none';
+            uploadText.style.display='block';
+            fetchProjects();
+        }
+    });
+}
+
+// Initial fetch
+$(document).ready(function(){ fetchProjects(); });
+
+   </script>
 
 
 

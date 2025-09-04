@@ -120,7 +120,7 @@
                   </span>
                 </a> <a href="#" class="dropdown-item"> <span class="dropdown-item-icon bg-info text-white"> <i class="fas
 												fa-bell"></i>
-                  </span> <span class="dropdown-item-desc"> Welcome to Otika
+                  </span> <span class="dropdown-item-desc"> Welcome to TEF
                     template! <span class="time">Yesterday</span>
                   </span>
                 </a>

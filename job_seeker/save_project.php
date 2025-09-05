@@ -4,30 +4,38 @@ include 'include/config.php';
 
 $user_id = $_SESSION['user_id'];
 
-$title = mysqli_real_escape_string($conn, $_POST['title']);
-$start_date = mysqli_real_escape_string($conn, $_POST['start_date']);
-$end_date = mysqli_real_escape_string($conn, $_POST['end_date']);
+$project_id = isset($_POST['project_id']) ? intval($_POST['project_id']) : 0;
+$name = mysqli_real_escape_string($conn, $_POST['name']);
+$url = mysqli_real_escape_string($conn, $_POST['url']);
+$date_start = mysqli_real_escape_string($conn, $_POST['date_start']);
+$date_end = mysqli_real_escape_string($conn, $_POST['date_end']);
 $description = mysqli_real_escape_string($conn, $_POST['description']);
-$project_id = isset($_POST['project_id']) ? (int)$_POST['project_id'] : 0;
+$is_on_going = isset($_POST['is_on_going']) ? 1 : 0;
 
-$image_name = '';
-if (!empty($_FILES['image']['name'])) {
-    $image_name = time() . '_' . $_FILES['image']['name'];
-    move_uploaded_file($_FILES['image']['tmp_name'], 'uploads/' . $image_name);
-}
-
-if ($project_id > 0) {
-    // Update Project
-    $sql = "UPDATE projects SET title='$title', start_date='$start_date', end_date='$end_date', description='$description'";
-    if ($image_name != '') $sql .= ", image='$image_name'";
-    $sql .= " WHERE id='$project_id' AND user_id='$user_id'";
-    mysqli_query($conn, $sql);
-    echo json_encode(["status" => "success", "message" => "Project updated successfully!"]);
-} else {
-    // Insert New Project
-    $sql = "INSERT INTO projects (user_id, title, start_date, end_date, description, image) 
-            VALUES ('$user_id', '$title', '$start_date', '$end_date', '$description', '$image_name')";
-    mysqli_query($conn, $sql);
-    echo json_encode(["status" => "success", "message" => "Project added successfully!"]);
+// Agar naya project hai (insert)
+if ($project_id == 0) {
+    $query = "INSERT INTO projects (user_id, name, url, date_start, date_end, description, is_on_going, created_at) 
+              VALUES ('$user_id', '$name', '$url', '$date_start', '$date_end', '$description', '$is_on_going', NOW())";
+    if (mysqli_query($conn, $query)) {
+        echo json_encode(["success" => true, "message" => "Project added successfully!"]);
+    } else {
+        echo json_encode(["success" => false, "message" => "Insert failed"]);
+    }
+} 
+// Agar existing project hai (update)
+else {
+    $query = "UPDATE projects SET 
+                name='$name',
+                url='$url',
+                date_start='$date_start',
+                date_end='$date_end',
+                description='$description',
+                is_on_going='$is_on_going'
+              WHERE id='$project_id' AND user_id='$user_id'";
+    if (mysqli_query($conn, $query)) {
+        echo json_encode(["success" => true, "message" => "Project updated successfully!"]);
+    } else {
+        echo json_encode(["success" => false, "message" => "Update failed"]);
+    }
 }
 ?>

@@ -221,9 +221,10 @@ include 'include/config.php'; // DB connection
                                                                 <div class="d-flex">
                                                                     <h4><?php echo htmlspecialchars($row['title']); ?></h4>
                                                                     <div class="cvnewbxedit ms-auto">
-                                                                        <a href="javascript:void(0);" onclick="showProfileExperienceEditModal(<?php echo $row['id']; ?>);" class="text text-dark">
+                                                                        <a href="javascript:void(0);" onclick="editExperience(<?php echo $row['id']; ?>);" class="text text-dark">
                                                                             <i class="fas fa-pencil-alt"></i>
                                                                         </a>
+
                                                                         <a href="javascript:void(0);" onclick="delete_profile_experience(<?php echo $row['id']; ?>);" class="text text-danger ms-2">
                                                                             <i class="fas fa-times"></i>
                                                                         </a>
@@ -252,7 +253,7 @@ include 'include/config.php'; // DB connection
 
 
                             </div>
-                            <div class="modal fade" id="add_experience_modal" tabindex="-1" aria-labelledby="addexpModalLabel" aria-hidden="true" role="dialog"></div>
+                            <!-- <div class="modal fade" id="add_experience_modal" tabindex="-1" aria-labelledby="addexpModalLabel" aria-hidden="true" role="dialog"></div> -->
                             <!-- education -->
                             <div class="card">
                                 <div class="card-header">
@@ -2331,21 +2332,21 @@ include 'include/config.php'; // DB connection
     <!-- AJAX for experience -->
     <script>
         function fetchExperiences() {
-            $.get('fetch_experiences_sql.php', function(data) {
-                const experiences = JSON.parse(data);
-                let html = '';
+    $.get('fetch_experiences_sql.php', function(data) {
+        const experiences = JSON.parse(data);
+        let html = '';
 
-                experiences.forEach(exp => {
-                    const endDate = (exp.is_currently_working == 1) ? "Present" : (exp.date_end || "N/A");
+        experiences.forEach(exp => {
+            const endDate = (exp.is_currently_working == 1) ? "Present" : (exp.date_end || "N/A");
 
-                    html += `
+            html += `
                 <li>
                     <span class="exdot"></span>
                     <div class="expbox" id="experience_${exp.id}">
                         <div class="d-flex">
-                            <h4>${exp.title}</h4>
+                            <h4>${exp.title || ''}</h4>
                             <div class="cvnewbxedit ms-auto">
-                                <a href="javascript:void(0);" onclick="showProfileExperienceEditModal(${exp.id});" class="text text-dark">
+                                <a href="javascript:void(0);" onclick="editExperience(${exp.id});" class="text text-dark">
                                     <i class="fas fa-pencil-alt"></i>
                                 </a> 
                                 <a href="javascript:void(0);" onclick="delete_profile_experience(${exp.id});" class="text text-danger ms-2">
@@ -2354,47 +2355,43 @@ include 'include/config.php'; // DB connection
                             </div>
                         </div>
                         <div class="excity"><i class="fas fa-map-marker-alt"></i> ${exp.city_name || ''} - ${exp.country_name || ''}</div>
-
-                        <div class="expcomp"><i class="fas fa-building"></i> ${exp.company}</div>
-                        <div class="expcomp"><i class="fas fa-calendar-alt"></i> From ${exp.date_start} - ${endDate}</div>
+                        <div class="expcomp"><i class="fas fa-building"></i> ${exp.company || ''}</div>
+                        <div class="expcomp"><i class="fas fa-calendar-alt"></i> From ${exp.date_start || ''} - ${endDate}</div>
                         <p>${exp.description || ''}</p>
                     </div>
                 </li>
             `;
-                });
+        });
 
-                if (html === '') {
-                    html = '<li><p>No experiences added yet.</p></li>';
-                }
-
-                $('#experience_div .experienceList').html(html);
-            });
+        if (html === '') {
+            html = '<li><p>No experiences added yet.</p></li>';
         }
+
+        $('#experience_div .experienceList').html(html);
+    });
+}
 
 
         // Submit form (Add/Edit)
-       function submitProfileExperienceForm() {
+        function submitProfileExperienceForm() {
     const formData = $("#add_edit_profile_experience").serialize();
 
-    $.ajax({
-        url: "save_experience_sql.php",
-        type: "POST",
-        data: formData,
-        success: function(response) {
-            let res = JSON.parse(response);
-            if (res.success) {
-                alert(res.message);
+    $.post("save_experience_sql.php", formData, function(response) {
+        let res = JSON.parse(response);
 
-                // ✅ modal close aur form reset
-                $("#experienceModal").modal("hide");
-                $("#add_edit_profile_experience")[0].reset();
-                $("#experience_id").val("");
+        if (res.success) {
+            // Refresh list
+            fetchExperiences();
 
-                // ✅ list refresh without reload
-                fetchExperiences();
-            } else {
-                alert("Error: " + res.message);
-            }
+            // Auto-close modal
+            const modalEl = document.getElementById("experienceModal");
+            const modal = bootstrap.Modal.getInstance(modalEl);
+            modal.hide();
+
+            // Reset form
+            $("#add_edit_profile_experience")[0].reset();
+        } else {
+            alert("Error: " + res.message);
         }
     });
 }
@@ -2402,36 +2399,49 @@ include 'include/config.php'; // DB connection
 
 
 
-        
+
         // Edit experience
-function showProfileExperienceEditModal(id) {
+     function editExperience(id) {
     $.get("get_experience_sql.php", { id: id }, function(response) {
         let data = JSON.parse(response);
+
         if (data.success) {
             let exp = data.experience;
 
-            // ✅ hidden id fill
+            // Hidden ID
             $("#experience_id").val(exp.id);
 
-            // ✅ fields fill
-            $("#title").val(exp.title);
-            $("#company").val(exp.company);
-            $("#experience_country_id").val(exp.country_id);
-            $("#experience_state_id").val(exp.state_id);
-            $("#city_id").val(exp.city_id);
-            $("#date_start").val(exp.date_start);
-            $("#date_end").val(exp.date_end);
+            // Text fields
+            $("#title").val(exp.title ?? "");
+            $("#company").val(exp.company ?? "");
 
+            // Dropdowns
+            $("#experience_country_id").val(exp.country_id ?? "");
+            $("#experience_state_id").val(exp.state_id ?? "");
+            $("#city_id").val(exp.city_id ?? "");
+
+            // Dates
+            $("#date_start").val(exp.date_start ?? "");
+            $("#date_end").val(exp.date_end ?? "");
+
+            // Radio buttons
             $("input[name='is_currently_working'][value='" + exp.is_currently_working + "']").prop("checked", true);
-            $("#description").val(exp.description);
 
-            // ✅ modal open
-            $("#experienceModal").modal("show");
+            // Textarea
+            $("#description").val(exp.description ?? "");
+
+            // Modal open (Bootstrap 5 way)
+            const modalEl = document.getElementById("experienceModal");
+            const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+            modal.show();
         } else {
             alert(data.message);
         }
     });
 }
+
+
+
 
 
         // Delete experience

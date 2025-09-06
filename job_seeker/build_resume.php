@@ -672,7 +672,7 @@ include 'include/config.php'; // DB connection
                     <h4 class="modal-title">Add Experience</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form class="form" id="add_edit_profile_experience" method="POST" action="">
+                <form class="form" id="add_edit_profile_experience" method="POST" action="save_experience_sql.php">
                     <!-- <input type="hidden" name="_token" value="6yWsZRaRmexsWsKMZhvrp1XB4w6hgjC2GUPscb02" autocomplete="off"> -->
 
                     <div class="modal-body">
@@ -721,7 +721,7 @@ include 'include/config.php'; // DB connection
                             </div>
 
                             <div class="formrow" id="div_date_start">
-                                <input class="form-control datepicker" autocomplete="off" id="date_start" placeholder="Experience Start Date" name="date_start" type="text" value="">
+                                <input class="form-control datepicker" autocomplete="off" id="date_start" placeholder="Experience Start Date" name="date_start" type="date" value="">
                                 <span class="help-block date_start-error"></span>
                             </div>
 
@@ -736,7 +736,7 @@ include 'include/config.php'; // DB connection
 
 
                             <div class="formrow" id="div_date_end">
-                                <input class="form-control datepicker" autocomplete="off" id="date_end" placeholder="Experience End Date" name="date_end" type="text" value="">
+                                <input class="form-control datepicker" autocomplete="off" id="date_end" placeholder="Experience End Date" name="date_end" type="date" value="">
                                 <span class="help-block date_end-error"></span>
                             </div>
 
@@ -2332,14 +2332,14 @@ include 'include/config.php'; // DB connection
     <!-- AJAX for experience -->
     <script>
         function fetchExperiences() {
-    $.get('fetch_experiences_sql.php', function(data) {
-        const experiences = JSON.parse(data);
-        let html = '';
+            $.get('fetch_experiences_sql.php', function(data) {
+                const experiences = JSON.parse(data);
+                let html = '';
 
-        experiences.forEach(exp => {
-            const endDate = (exp.is_currently_working == 1) ? "Present" : (exp.date_end || "N/A");
+                experiences.forEach(exp => {
+                    const endDate = (exp.is_currently_working == 1) ? "Present" : (exp.date_end || "N/A");
 
-            html += `
+                    html += `
                 <li>
                     <span class="exdot"></span>
                     <div class="expbox" id="experience_${exp.id}">
@@ -2361,88 +2361,54 @@ include 'include/config.php'; // DB connection
                     </div>
                 </li>
             `;
-        });
+                });
 
-        if (html === '') {
-            html = '<li><p>No experiences added yet.</p></li>';
+                if (html === '') {
+                    html = '<li><p>No experiences added yet.</p></li>';
+                }
+
+                $('#experience_div .experienceList').html(html);
+            });
         }
-
-        $('#experience_div .experienceList').html(html);
-    });
-}
-
-
-        // Submit form (Add/Edit)
-        function submitProfileExperienceForm() {
-    const formData = $("#add_edit_profile_experience").serialize();
-
-    $.post("save_experience_sql.php", formData, function(response) {
-        let res = JSON.parse(response);
-
-        if (res.success) {
-            // Refresh list
-            fetchExperiences();
-
-            // Auto-close modal
-            const modalEl = document.getElementById("experienceModal");
-            const modal = bootstrap.Modal.getInstance(modalEl);
-            modal.hide();
-
-            // Reset form
-            $("#add_edit_profile_experience")[0].reset();
-        } else {
-            alert("Error: " + res.message);
-        }
-    });
-}
-
-
-
-
 
         // Edit experience
-     function editExperience(id) {
-    $.get("get_experience_sql.php", { id: id }, function(response) {
-        let data = JSON.parse(response);
+        function editExperience(id) {
+            $.get('get_experience_sql.php', {
+                id: id
+            }, function(response) {
+                if (response.success) {
+                    const exp = response.experience;
 
-        if (data.success) {
-            let exp = data.experience;
+                    // Hidden id
+                    $("#experience_id").val(exp.id);
 
-            // Hidden ID
-            $("#experience_id").val(exp.id);
+                    // Fill inputs
+                    $("#title").val(exp.title);
+                    $("#company").val(exp.company);
+                    $("#experience_country_id").val(exp.country_id);
+                    $("#experience_state_id").val(exp.state_id);
+                    $("#city_id").val(exp.city_id);
+                    $("#date_start").val(exp.date_start);
+                    $("#date_end").val(exp.date_end);
+                    $("#description").val(exp.description);
 
-            // Text fields
-            $("#title").val(exp.title ?? "");
-            $("#company").val(exp.company ?? "");
+                    // Radio button
+                    if (exp.is_currently_working == "1") {
+                        $("#currently_working").prop("checked", true);
+                        $("#div_date_end").hide();
+                    } else {
+                        $("#not_currently_working").prop("checked", true);
+                        $("#div_date_end").show();
+                    }
 
-            // Dropdowns
-            $("#experience_country_id").val(exp.country_id ?? "");
-            $("#experience_state_id").val(exp.state_id ?? "");
-            $("#city_id").val(exp.city_id ?? "");
-
-            // Dates
-            $("#date_start").val(exp.date_start ?? "");
-            $("#date_end").val(exp.date_end ?? "");
-
-            // Radio buttons
-            $("input[name='is_currently_working'][value='" + exp.is_currently_working + "']").prop("checked", true);
-
-            // Textarea
-            $("#description").val(exp.description ?? "");
-
-            // Modal open (Bootstrap 5 way)
-            const modalEl = document.getElementById("experienceModal");
-            const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
-            modal.show();
-        } else {
-            alert(data.message);
+                    // Show modal
+                    var myModal = new bootstrap.Modal(document.getElementById('experienceModal'));
+                    myModal.show();
+                } else {
+                    alert(response.message || "Experience not found");
+                }
+            }, "json");
         }
-    });
-}
-
-
-
-
 
         // Delete experience
         function delete_profile_experience(id) {
@@ -2460,6 +2426,40 @@ include 'include/config.php'; // DB connection
                 });
             }
         }
+        // Submit form (Add/Edit)
+        function submitProfileExperienceForm() {
+            const formData = $("#add_edit_profile_experience").serialize();
+
+            $.post("save_experience_sql.php", formData, function(res) {
+                if (res.success) {
+                    // Refresh list
+                    fetchExperiences();
+
+                    // Auto-close modal
+                    var myModalEl = document.getElementById('experienceModal');
+                    var modal = bootstrap.Modal.getInstance(myModalEl);
+                    modal.hide();
+
+                    // Reset form
+                    $("#add_edit_profile_experience")[0].reset();
+                } else {
+                    alert("Error: " + res.message);
+                }
+            }, "json"); // <--- yahan specify kar diya
+        }
+        // On page load
+        $(document).ready(function() {
+            fetchProjects();
+        });
+        //    date picker
+        $(document).ready(function() {
+            // Datepicker init
+            $('.datepicker').datepicker({
+                format: "yyyy-mm-dd",
+                autoclose: true,
+                todayHighlight: true
+            });
+        });
     </script>
 
 

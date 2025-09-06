@@ -1,45 +1,68 @@
 <?php
-session_start();
 include 'include/config.php';
+session_start();
 
+// User ki ID session se lo (adjust karo agar alag tarah store ki hai)
+if (!isset($_SESSION['user_id'])) {
+    echo json_encode(["success" => false, "message" => "User not logged in"]);
+    exit;
+}
 $user_id = $_SESSION['user_id'];
 
-$id = mysqli_real_escape_string($conn, $_POST['experience_id']);
-$title = mysqli_real_escape_string($conn, $_POST['title']);
-$company = mysqli_real_escape_string($conn, $_POST['company']);
-$country_id = mysqli_real_escape_string($conn, $_POST['experience_country_id']);
-$state_id = mysqli_real_escape_string($conn, $_POST['experience_state_id']);
-$city_id = mysqli_real_escape_string($conn, $_POST['city_id']);
-$date_start = mysqli_real_escape_string($conn, $_POST['date_start']);
-$date_end = mysqli_real_escape_string($conn, $_POST['date_end']);
-$is_currently_working = isset($_POST['is_currently_working']) ? 1 : 0;
-$description = mysqli_real_escape_string($conn, $_POST['description']);
+// Form fields safely lo
+$experience_id = !empty($_POST['experience_id']) ? intval($_POST['experience_id']) : 0;
 
-if (!empty($id)) {
-    // ✅ UPDATE query (title included)
+$title       = !empty($_POST['title']) ? trim($_POST['title']) : NULL;
+$company     = !empty($_POST['company']) ? trim($_POST['company']) : NULL;
+$country_id  = !empty($_POST['country_id']) ? intval($_POST['country_id']) : NULL;
+$state_id    = !empty($_POST['state_id']) ? intval($_POST['state_id']) : NULL;
+$city_id     = !empty($_POST['city_id']) ? intval($_POST['city_id']) : NULL;
+$date_start  = !empty($_POST['date_start']) ? $_POST['date_start'] : NULL;
+$is_currently_working = isset($_POST['is_currently_working']) ? intval($_POST['is_currently_working']) : 0;
+$date_end    = (!empty($_POST['date_end']) && $is_currently_working == 0) ? $_POST['date_end'] : NULL;
+$description = !empty($_POST['description']) ? trim($_POST['description']) : NULL;
+
+// Agar update karna hai
+if ($experience_id > 0) {
     $sql = "UPDATE job_seeker_experiences 
-            SET title='$title', company='$company', country_id='$country_id',
-                state_id='$state_id', city_id='$city_id', date_start='$date_start',
-                date_end='$date_end', is_currently_working='$is_currently_working',
-                description='$description'
-            WHERE id='$id' AND user_id='$user_id'";
+            SET title=?, company=?, country_id=?, state_id=?, city_id=?, 
+                date_start=?, date_end=?, is_currently_working=?, description=?
+            WHERE id=? AND user_id=?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param(
+        "ssiiisssiii",
+        $title, $company, $country_id, $state_id, $city_id,
+        $date_start, $date_end, $is_currently_working, $description,
+        $experience_id, $user_id
+    );
 
-    if (mysqli_query($conn, $sql)) {
+    if ($stmt->execute()) {
         echo json_encode(["success" => true, "message" => "Experience updated successfully"]);
     } else {
-        echo json_encode(["success" => false, "message" => mysqli_error($conn)]);
+        echo json_encode(["success" => false, "message" => "Update failed: " . $stmt->error]);
     }
-} else {
-    // ✅ INSERT query
-    $sql = "INSERT INTO job_seeker_experiences 
-            (user_id, title, company, country_id, state_id, city_id, date_start, date_end, is_currently_working, description) 
-            VALUES 
-            ('$user_id', '$title', '$company', '$country_id', '$state_id', '$city_id', '$date_start', '$date_end', '$is_currently_working', '$description')";
+    $stmt->close();
 
-    if (mysqli_query($conn, $sql)) {
+} else {
+    // Agar insert karna hai
+    $sql = "INSERT INTO job_seeker_experiences 
+            (user_id, title, company, country_id, state_id, city_id, 
+             date_start, date_end, is_currently_working, description, created_at) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param(
+        "issiiissis",
+        $user_id, $title, $company, $country_id, $state_id, $city_id,
+        $date_start, $date_end, $is_currently_working, $description
+    );
+
+    if ($stmt->execute()) {
         echo json_encode(["success" => true, "message" => "Experience added successfully"]);
     } else {
-        echo json_encode(["success" => false, "message" => mysqli_error($conn)]);
+        echo json_encode(["success" => false, "message" => "Insert failed: " . $stmt->error]);
     }
+    $stmt->close();
 }
+
+$conn->close();
 ?>

@@ -2800,26 +2800,4 @@ include 'include/config.php'; // DB connection
 // ✅ Delete Experience
 <!-- function delete_profile_experience(id) { if (confirm("Are you sure you want to delete this experience?")) { $.post("delete_experience_sql.php", { id: id }, function(response) { let res = JSON.parse(response); if (res.success) { alert(res.message); location.reload(); } else { alert("Delete failed: " + res.message); } }); } }
 
-    // ✅ Save (Add/Edit) Experience
-    function submitProfileExperienceForm() {
-        const formData = $("#add_edit_profile_experience").serialize();
-
-        $.post("save_experience_sql.php", formData, function(response) {
-            let res = JSON.parse(response);
-
-            if (res.success) {
-                // ✅ Refresh list
-                fetchExperiences();
-
-                // ✅ Close modal automatically (Bootstrap 5 way)
-                const modalEl = document.getElementById('experienceModal');
-                const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
-                modal.hide();
-
-                // ✅ Reset form
-                $("#add_edit_profile_experience")[0].reset();
-            } else {
-                alert("Error: " + res.message);
-            }
-        });
-    } -->
+    

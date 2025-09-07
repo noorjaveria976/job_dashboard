@@ -715,6 +715,12 @@ include 'include/config.php'; // DB connection
                                 <span id="default_city_experience_dd">
                                     <select class="form-control" id="city_id" name="city_id">
                                         <option value="" selected="selected">Select City</option>
+                                        <option value="3921">Arizona</option>
+                                        <option value="3922">Arkansas</option>
+                                        <option value="3923">Byram</option>
+                                        <option value="3924">California</option>
+                                        <option value="3925">Cokato</option>
+                                        <option value="3926">Colorado</option>
                                     </select>
                                 </span>
                                 <span class="help-block city_id-error"></span>
@@ -2331,6 +2337,7 @@ include 'include/config.php'; // DB connection
 
     <!-- AJAX for experience -->
     <script>
+        // Fetch Experiences
         function fetchExperiences() {
             $.get('fetch_experiences_sql.php', function(data) {
                 const experiences = JSON.parse(data);
@@ -2354,13 +2361,15 @@ include 'include/config.php'; // DB connection
                                 </a>
                             </div>
                         </div>
-                        <div class="excity"><i class="fas fa-map-marker-alt"></i> ${exp.city_name || ''} - ${exp.country_name || ''}</div>
+                        <div class="excity">
+                            <i class="fas fa-map-marker-alt"></i> ${exp.city_name || ''} - ${exp.country_name || ''}
+                        </div>
                         <div class="expcomp"><i class="fas fa-building"></i> ${exp.company || ''}</div>
                         <div class="expcomp"><i class="fas fa-calendar-alt"></i> From ${exp.date_start || ''} - ${endDate}</div>
                         <p>${exp.description || ''}</p>
                     </div>
                 </li>
-            `;
+                `;
                 });
 
                 if (html === '') {
@@ -2372,42 +2381,47 @@ include 'include/config.php'; // DB connection
         }
 
         // Edit experience
-        function editExperience(id) {
-            $.get('get_experience_sql.php', {
-                id: id
-            }, function(response) {
-                if (response.success) {
-                    const exp = response.experience;
+        function editExperience(expId) {
+            console.log("Experience ID:", expId);
+            $.ajax({
+                url: "get_experience_sql.php",
+                type: "GET",
+                data: {
+                    id: expId
+                },
+                success: function(response) {
+                    const data = JSON.parse(response);
+                    if (data.success) {
+                        // fill values
+                        $('#experience_id').val(data.experience.id);
+                        $('#title').val(data.experience.title);
+                        $('#company').val(data.experience.company);
+                        $('#experience_country_id').val(data.experience.country_id);
+                        $('#experience_state_id').val(data.experience.state_id);
+                        $('#city_id').val(data.experience.city_id);
 
-                    // Hidden id
-                    $("#experience_id").val(exp.id);
 
-                    // Fill inputs
-                    $("#title").val(exp.title);
-                    $("#company").val(exp.company);
-                    $("#experience_country_id").val(exp.country_id);
-                    $("#experience_state_id").val(exp.state_id);
-                    $("#city_id").val(exp.city_id);
-                    $("#date_start").val(exp.date_start);
-                    $("#date_end").val(exp.date_end);
-                    $("#description").val(exp.description);
+                        $('#date_start').val(data.experience.date_start);
+                        $('#date_end').val(data.experience.date_end);
+                        $('input[name="is_currently_working"][value="' + data.experience.is_currently_working + '"]').prop('checked', true);
+                        $('#description').val(data.experience.description);
 
-                    // Radio button
-                    if (exp.is_currently_working == "1") {
-                        $("#currently_working").prop("checked", true);
-                        $("#div_date_end").hide();
+                        // Show/Hide end date row according to radio
+                        if (data.experience.is_currently_working == 1) {
+                            $('#div_date_end').hide();
+                        } else {
+                            $('#div_date_end').show();
+                        }
+
+                        // Show modal
+                        const modalEl = document.getElementById('experienceModal');
+                        const modal = new bootstrap.Modal(modalEl);
+                        modal.show();
                     } else {
-                        $("#not_currently_working").prop("checked", true);
-                        $("#div_date_end").show();
+                        alert('Experience not found!');
                     }
-
-                    // Show modal
-                    var myModal = new bootstrap.Modal(document.getElementById('experienceModal'));
-                    myModal.show();
-                } else {
-                    alert(response.message || "Experience not found");
                 }
-            }, "json");
+            });
         }
 
         // Delete experience
@@ -2418,42 +2432,44 @@ include 'include/config.php'; // DB connection
                 }, function(response) {
                     let res = JSON.parse(response);
                     if (res.success) {
-                        alert(res.message);
-                        location.reload();
+                        fetchExperiences();
                     } else {
                         alert("Delete failed: " + res.message);
                     }
                 });
             }
         }
+
         // Submit form (Add/Edit)
         function submitProfileExperienceForm() {
             const formData = $("#add_edit_profile_experience").serialize();
 
-            $.post("save_experience_sql.php", formData, function(res) {
+            $.post("save_experience_sql.php", formData, function(response) {
+                let res = JSON.parse(response);
+
                 if (res.success) {
                     // Refresh list
                     fetchExperiences();
 
-                    // Auto-close modal
-                    var myModalEl = document.getElementById('experienceModal');
-                    var modal = bootstrap.Modal.getInstance(myModalEl);
+                    // Close modal automatically
+                    const modalEl = document.getElementById('experienceModal');
+                    const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
                     modal.hide();
 
                     // Reset form
                     $("#add_edit_profile_experience")[0].reset();
+                    $('#experience_id').val(''); // clear hidden field
                 } else {
                     alert("Error: " + res.message);
                 }
-            }, "json"); // <--- yahan specify kar diya
+            });
         }
+
         // On page load
         $(document).ready(function() {
-            fetchProjects();
-        });
-        //    date picker
-        $(document).ready(function() {
-            // Datepicker init
+            fetchExperiences();
+
+            // Init datepickers
             $('.datepicker').datepicker({
                 format: "yyyy-mm-dd",
                 autoclose: true,
@@ -2461,6 +2477,7 @@ include 'include/config.php'; // DB connection
             });
         });
     </script>
+
 
 
 </body>
@@ -2778,3 +2795,31 @@ include 'include/config.php'; // DB connection
 <option value="3976">West Virginia</option>
 <option value="3977">Wisconsin</option>
 <option value="3978">Wyoming</option>
+
+
+// ✅ Delete Experience
+<!-- function delete_profile_experience(id) { if (confirm("Are you sure you want to delete this experience?")) { $.post("delete_experience_sql.php", { id: id }, function(response) { let res = JSON.parse(response); if (res.success) { alert(res.message); location.reload(); } else { alert("Delete failed: " + res.message); } }); } }
+
+    // ✅ Save (Add/Edit) Experience
+    function submitProfileExperienceForm() {
+        const formData = $("#add_edit_profile_experience").serialize();
+
+        $.post("save_experience_sql.php", formData, function(response) {
+            let res = JSON.parse(response);
+
+            if (res.success) {
+                // ✅ Refresh list
+                fetchExperiences();
+
+                // ✅ Close modal automatically (Bootstrap 5 way)
+                const modalEl = document.getElementById('experienceModal');
+                const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+                modal.hide();
+
+                // ✅ Reset form
+                $("#add_edit_profile_experience")[0].reset();
+            } else {
+                alert("Error: " + res.message);
+            }
+        });
+    } -->

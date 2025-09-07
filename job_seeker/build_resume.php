@@ -2471,7 +2471,7 @@ include 'include/config.php'; // DB connection
 
             // Init datepickers
             $('.datepicker').datepicker({
-                format: "dd-mm-yyyy",
+                format: "yyyy-mm-dd",
                 autoclose: true,
                 todayHighlight: true
             });

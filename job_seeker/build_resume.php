@@ -196,59 +196,69 @@ include 'include/config.php'; // DB connection
                                     </button>
                                 </div>
 
-
+<!-- 
                                 <div class="card-body">
-                                    <div id="experience_div">
-                                        <ul class="experienceList">
-                                            <?php
+                                    <?php
+                                    $user_id = $_SESSION['user_id'];
 
+                                    // Query with JOINs for readable names
+                                    $query = mysqli_query($conn, "
+                                    SELECT e.id, e.title, e.company, e.date_start, e.date_end, e.is_currently_working, e.description,
+                                    c.country_name, s.state_name, ci.city_name
+                                    FROM job_seeker_experiences e
+                                    LEFT JOIN countries c ON e.country_id = c.id
+                                    LEFT JOIN states s ON e.state_id = s.id
+                                    LEFT JOIN cities ci ON e.city_id = ci.id
+                                    WHERE e.user_id = '$user_id'
+                                    ORDER BY e.id DESC
+                                    ");
+                                    ?>
 
-                                            if (!isset($_SESSION['user_id'])) {
-                                                echo "<li>No user logged in</li>";
-                                            } else {
-                                                $user_id = $_SESSION['user_id'];
-
-                                                // Yahan wo query lagani hai jo main ne batayi
-                                                $sql = "SELECT * FROM job_seeker_experiences WHERE user_id = '$user_id' ORDER BY date_start DESC";
-                                                $result = mysqli_query($conn, $sql);
-
-                                                if ($result && mysqli_num_rows($result) > 0) {
-                                                    while ($row = mysqli_fetch_assoc($result)) {
-                                            ?>
-                                                        <li>
-                                                            <span class="exdot"></span>
-                                                            <div class="expbox" id="experience_<?php echo $row['id']; ?>">
-                                                                <div class="d-flex">
-                                                                    <h4><?php echo htmlspecialchars($row['title']); ?></h4>
-                                                                    <div class="cvnewbxedit ms-auto">
-                                                                        <a href="javascript:void(0);" onclick="editExperience(<?php echo $row['id']; ?>);" class="text text-dark">
-                                                                            <i class="fas fa-pencil-alt"></i>
-                                                                        </a>
-
-                                                                        <a href="javascript:void(0);" onclick="delete_profile_experience(<?php echo $row['id']; ?>);" class="text text-danger ms-2">
-                                                                            <i class="fas fa-times"></i>
-                                                                        </a>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="excity"><i class="fas fa-map-marker-alt"></i><?php echo $row['city_id']; ?> - <?php echo $row['country_id']; ?></div>
-                                                                <div class="expcomp"><i class="fas fa-building"></i><?php echo htmlspecialchars($row['company']); ?></div>
-                                                                <div class="expcomp"><i class="fas fa-calendar-alt"></i>
-                                                                    From <?php echo $row['date_start']; ?>
-                                                                    <?php echo $row['is_currently_working'] ? "- Present" : "- " . $row['date_end']; ?>
-                                                                </div>
-                                                                <p><?php echo nl2br(htmlspecialchars($row['description'])); ?></p>
-                                                            </div>
-                                                        </li>
-                                            <?php
-                                                    }
-                                                } else {
-                                                    echo "<li>No experience added yet</li>";
-                                                }
+                                    <div class="row">
+                                        <?php
+                                        if (mysqli_num_rows($query) > 0) {
+                                            while ($row = mysqli_fetch_assoc($query)) {
+                                                $exp_id = $row['id'];
+                                                $title = htmlspecialchars($row['title']);
+                                                $company = htmlspecialchars($row['company']);
+                                                $city = htmlspecialchars($row['city_name']);
+                                                $country = htmlspecialchars($row['country_name']);
+                                                $date_start = !empty($row['date_start']) ? date('d M, Y', strtotime($row['date_start'])) : '';
+                                                $date_end = ($row['is_currently_working'] == 1) ? 'Present' : (!empty($row['date_end']) ? date('d M, Y', strtotime($row['date_end'])) : '');
+                                                $description = htmlspecialchars($row['description']);
+                                        ?>
+                                                <div class="col-md-4 mb-3">
+                                                    <div class="card h-100 shadow-sm">
+                                                        <div class="card-body">
+                                                            <h5 class="card-title"><?php echo $title; ?></h5>
+                                                            <h6 class="card-subtitle mb-2 text-muted"><?php echo $company; ?></h6>
+                                                            <p class="card-text">
+                                                                <i class="fas fa-map-marker-alt"></i> <?php echo "$city - $country"; ?><br>
+                                                                <small><?php echo "$date_start - $date_end"; ?></small>
+                                                            </p>
+                                                            <p class="card-text"><?php echo $description; ?></p>
+                                                        </div>
+                                                        <div class="card-footer text-end">
+                                                            <a href="javascript:;" onclick="editExperience(<?php echo $exp_id; ?>);" class="text-primary me-2">
+                                                                <i class="fas fa-pencil-alt"></i>
+                                                            </a>
+                                                            <a href="delete_experience.php?id=<?php echo $exp_id; ?>"
+                                                                class="text-danger"
+                                                                onclick="return confirm('Delete this Experience?');">
+                                                                <i class="fas fa-times"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                        <?php
                                             }
-                                            ?>
-                                        </ul>
+                                        } else {
+                                            echo '<div class="col-12 text-center">No Experience Added Yet</div>';
+                                        }
+                                        ?>
                                     </div>
-                                </div>
+                                </div> -->
+
 
 
 

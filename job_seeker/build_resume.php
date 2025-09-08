@@ -2338,47 +2338,47 @@ include 'include/config.php'; // DB connection
     <!-- AJAX for experience -->
     <script>
         // Fetch Experiences
-        function fetchExperiences() {
-            $.get('fetch_experiences_sql.php', function(data) {
-                const experiences = JSON.parse(data);
-                let html = '';
+        // function fetchExperiences() {
+        //     $.get('fetch_experiences_sql.php', function(data) {
+        //         const experiences = JSON.parse(data);
+        //         let html = '';
 
-                experiences.forEach(exp => {
-                    const endDate = (exp.is_currently_working == 1) ? "Present" : (exp.date_end || "N/A");
+        //         experiences.forEach(exp => {
+        //             const endDate = (exp.is_currently_working == 1) ? "Present" : (exp.date_end || "N/A");
 
-                    html += `
-                <li>
-                    <span class="exdot"></span>
-                    <div class="expbox" id="experience_${exp.id}">
-                        <div class="d-flex">
-                            <h4>${exp.title || ''}</h4>
-                            <div class="cvnewbxedit ms-auto">
-                                <a href="javascript:void(0);" onclick="editExperience(${exp.id});" class="text text-dark">
-                                    <i class="fas fa-pencil-alt"></i>
-                                </a> 
-                                <a href="javascript:void(0);" onclick="delete_profile_experience(${exp.id});" class="text text-danger ms-2">
-                                    <i class="fas fa-times"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="excity">
-                            <i class="fas fa-map-marker-alt"></i> ${exp.city_name || ''} - ${exp.country_name || ''}
-                        </div>
-                        <div class="expcomp"><i class="fas fa-building"></i> ${exp.company || ''}</div>
-                        <div class="expcomp"><i class="fas fa-calendar-alt"></i> From ${exp.date_start || ''} - ${endDate}</div>
-                        <p>${exp.description || ''}</p>
-                    </div>
-                </li>
-                `;
-                });
+        //             html += `
+        //         <li>
+        //             <span class="exdot"></span>
+        //             <div class="expbox" id="experience_${exp.id}">
+        //                 <div class="d-flex">
+        //                     <h4>${exp.title || ''}</h4>
+        //                     <div class="cvnewbxedit ms-auto">
+        //                         <a href="javascript:void(0);" onclick="editExperience(${exp.id});" class="text text-dark">
+        //                             <i class="fas fa-pencil-alt"></i>
+        //                         </a> 
+        //                         <a href="javascript:void(0);" onclick="delete_profile_experience(${exp.id});" class="text text-danger ms-2">
+        //                             <i class="fas fa-times"></i>
+        //                         </a>
+        //                     </div>
+        //                 </div>
+        //                 <div class="excity">
+        //                     <i class="fas fa-map-marker-alt"></i> ${exp.city_name || ''} - ${exp.country_name || ''}
+        //                 </div>
+        //                 <div class="expcomp"><i class="fas fa-building"></i> ${exp.company || ''}</div>
+        //                 <div class="expcomp"><i class="fas fa-calendar-alt"></i> From ${exp.date_start || ''} - ${endDate}</div>
+        //                 <p>${exp.description || ''}</p>
+        //             </div>
+        //         </li>
+        //         `;
+        //         });
 
-                if (html === '') {
-                    html = '<li><p>No experiences added yet.</p></li>';
-                }
+        //         if (html === '') {
+        //             html = '<li><p>No experiences added yet.</p></li>';
+        //         }
 
-                $('#experience_div .experienceList').html(html);
-            });
-        }
+        //         $('#experience_div .experienceList').html(html);
+        //     });
+        // }
 
         // Edit experience
         function editExperience(expId) {

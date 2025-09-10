@@ -777,7 +777,7 @@ include 'include/config.php'; // DB connection
         aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
-                <form class="form" id="add_edit_profile_education" method="POST" action="education_insert.php">
+                <form class="form" id="add_edit_profile_education" method="POST" action="education_insert_sql.php">
 
 
                     <div class="modal-header">
@@ -906,7 +906,9 @@ include 'include/config.php'; // DB connection
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-large btn-primary" onclick="submitProfileEducationForm();">Save Changes <i class="fa fa-arrow-circle-right" aria-hidden="true"></i></button>
+                        <button type="submit" class="btn btn-large btn-primary">
+                            Save Changes <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+                        </button>
                     </div>
                 </form>
             </div>

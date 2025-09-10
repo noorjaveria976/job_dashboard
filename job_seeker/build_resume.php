@@ -260,19 +260,21 @@ include 'include/config.php'; // DB connection
                                 </div>
                                 <div class="card-body">
                                     <?php
-                                    $user_id = $_SESSION['user_id'];
+$user_id = $_SESSION['user_id'];
 
-                                    $sql = "SELECT id, degree_level, degree_type, degree_title, major_subjects, country, state, city, institution, date_completion, degree_result, result_type 
+$sql = "SELECT id, user_id, degree_level_id, degree_type_id, degree_title, major_subjects, country_id, state_id, city_id, institution, date_completion, degree_result, result_type_id, created_at 
         FROM job_seeker_education 
         WHERE user_id = '$user_id' 
         ORDER BY id DESC";
 
-                                    $query = mysqli_query($conn, $sql);
+$query = mysqli_query($conn, $sql);
 
-                                    if (!$query) {
-                                        die("SQL Error: " . mysqli_error($conn));
-                                    }
-                                    ?>
+// Debug agar query fail ho
+if (!$query) {
+    die("SQL Error in Education Section: " . mysqli_error($conn) . " | Query: " . $sql);
+}
+?>
+
 
                                     <div class="" id="education_div">
                                         <ul class="educationList">
@@ -282,7 +284,7 @@ include 'include/config.php'; // DB connection
                                                     <div class="expbox" id="education_<?php echo $row['id']; ?>">
                                                         <div class="d-flex">
                                                             <h4>
-                                                                <?php echo htmlspecialchars($row['degree_level']); ?> -
+                                                                <?php echo htmlspecialchars($row['degree_level_id']); ?> -
                                                                 <?php echo htmlspecialchars($row['degree_title']); ?>
                                                             </h4>
                                                             <div class="cvnewbxedit ms-auto">
@@ -296,9 +298,9 @@ include 'include/config.php'; // DB connection
                                                                 </a>
                                                             </div>
                                                         </div>
-                                                        <div class="date"><?php echo $row['date_completion']; ?> - <?php echo $row['city']; ?> - <?php echo $row['country']; ?></div>
-                                                        <div class="expcomp"><i class="fas fa-graduation-cap"></i> <?php echo $row['degree_type']; ?></div>
-                                                        <div class="expcomp"><i class="fas fa-map-marker-alt"></i> <?php echo $row['city']; ?> - <?php echo $row['country']; ?></div>
+                                                        <div class="date"><?php echo $row['date_completion']; ?> - <?php echo $row['city_id']; ?> - <?php echo $row['country_id']; ?></div>
+                                                        <div class="expcomp"><i class="fas fa-graduation-cap"></i> <?php echo $row['degree_type_id']; ?></div>
+                                                        <div class="expcomp"><i class="fas fa-map-marker-alt"></i> <?php echo $row['city_id']; ?> - <?php echo $row['country_id']; ?></div>
                                                         <div class="expcomp"><i class="fas fa-school"></i> <?php echo $row['institution']; ?></div>
                                                     </div>
                                                 </li>
@@ -819,10 +821,10 @@ include 'include/config.php'; // DB connection
                             <div class="formrow" id="div_degree_level_id">
                                 <select class="form-control" id="degree_level_id" name="degree_level_id">
                                     <option value="" selected="selected">Select Degree Level</option>
-                                    <option value="1">Non-Matriculation</option>
-                                    <option value="2">Matriculation/O-Level</option>
-                                    <option value="3">Intermediate/A-Level</option>
-                                    <option value="4">Bachelors</option>
+                                    <option value="Non-Matriculation">Non-Matriculation</option>
+                                    <option value="Matriculation/O-Level">Matriculation/O-Level</option>
+                                    <option value="Intermediate/A-Level">Intermediate/A-Level</option>
+                                    <option value="Bachelors">Bachelors</option>
 
                                 </select>
                                 <span class="help-block degree_level_id-error"></span>
@@ -833,6 +835,9 @@ include 'include/config.php'; // DB connection
                                 <span id="degree_types_dd">
                                     <select class="form-control" id="degree_type_id" name="degree_type_id">
                                         <option value="" selected="selected">Select Degree Type</option>
+                                        <option value="Science">Science</option>
+                                        <option value="Arts">Arts</option>
+                                        <option value="Computer">Computer</option>
                                     </select>
                                 </span>
                                 <span class="help-block degree_type_id-error"></span>
@@ -843,14 +848,14 @@ include 'include/config.php'; // DB connection
                                 <span class="help-block degree_title-error"></span>
                             </div>
 
-                            <div class="formrow" id="div_major_subjects">
+                            <!-- <div class="formrow" id="div_major_subjects">
                                 <select class="form-control select2-multiple select2-hidden-accessible" id="major_subjects" multiple="" name="major_subjects[]" tabindex="-1" aria-hidden="true">
-                                    <option value="1">Abnormal Psychology</option>
-                                    <option value="2">Accounting</option>
-                                    <option value="3">Accounting &amp; Finance</option>
-                                    <option value="4">Acting and Performance</option>
-                                    <option value="5">Addressing problems of learning through technology and pedagogy</option>
-                                    <option value="6">Administrative Law and Accountability</option>
+                                    <option value="Abnormal Psychology">Abnormal Psychology</option>
+                                    <option value="Accounting">Accounting</option>
+                                    <option value="Accounting &amp; Finance">Accounting &amp; Finance</option>
+                                    <option value="Acting and Performance">Acting and Performance</option>
+                                    <option value="Addressing problems of learning through technology and pedagogy">Addressing problems of learning through technology and pedagogy</option>
+                                    <option value="Administrative Law and Accountability">Administrative Law and Accountability</option>
 
                                 </select>
                                 <span class="select2 select2-container select2-container--default" dir="ltr" style="width: 766.667px;"></span><span class="selection"></span><span class="select2-selection select2-selection--multiple" role="combobox" aria-autocomplete="list" aria-haspopup="true" aria-expanded="false" tabindex="0">
@@ -860,16 +865,16 @@ include 'include/config.php'; // DB connection
                                 </span>
                                 </span><span class="dropdown-wrapper" aria-hidden="true"></span>
                                 <span class="help-block major_subjects-error"></span>
-                            </div>
+                            </div> -->
 
                             <div class="formrow" id="div_country_id">
                                 <select class="form-control" id="education_country_id" name="country_id">
                                     <option value="">Select Country</option>
-                                    <option value="1">Afghanistan</option>
-                                    <option value="2">Albania</option>
-                                    <option value="3">Algeria</option>
-                                    <option value="4">American Samoa</option>
-                                    <option value="5">Andorra</option>
+                                    <option value="Afghanistan">Afghanistan</option>
+                                    <option value="Albania">Albania</option>
+                                    <option value="Algeria">Algeria</option>
+                                    <option value="American Samoa">American Samoa</option>
+                                    <option value="Andorra">Andorra</option>
 
                                 </select>
                                 <span class="help-block country_id-error"></span>
@@ -879,10 +884,10 @@ include 'include/config.php'; // DB connection
                                 <span id="default_state_education_dd">
                                     <select id="education_state_id" class="form-control" name="state_id">
                                         <option value="">Select State</option>
-                                        <option value="3919">Alabama</option>
-                                        <option value="3920">Alaska</option>
-                                        <option value="3921">Arizona</option>
-                                        <option value="3922">Arkansas</option>
+                                        <option value="Alabama">Alabama</option>
+                                        <option value="Alaska">Alaska</option>
+                                        <option value="Arizona">Arizona</option>
+                                        <option value="Arkansas">Arkansas</option>
 
                                     </select></span>
                                 <span class="help-block state_id-error"></span>
@@ -892,6 +897,10 @@ include 'include/config.php'; // DB connection
                                 <span id="default_city_education_dd">
                                     <select class="form-control" id="city_id" name="city_id">
                                         <option value="" selected="selected">Select City</option>
+                                        <option value="Lodhran">Lodhran</option>
+                                        <option value="BWP">BWP</option>
+                                        <option value="Multan">Multan</option>
+                                        <option value="Lahore">Lahore</option>
                                     </select>
                                 </span>
                                 <span class="help-block city_id-error"></span>
@@ -926,9 +935,9 @@ include 'include/config.php'; // DB connection
                             <div class="formrow" id="div_result_type_id">
                                 <select class="form-control" id="result_type_id" name="result_type_id">
                                     <option value="" selected="selected">Select Result Type</option>
-                                    <option value="1">GPA</option>
-                                    <option value="2">Grade</option>
-                                    <option value="3">Percentage</option>
+                                    <option value="GPA">GPA</option>
+                                    <option value="Grade">Grade</option>
+                                    <option value="Percentage">Percentage</option>
                                 </select>
                                 <span class="help-block result_type_id-error"></span>
                             </div>

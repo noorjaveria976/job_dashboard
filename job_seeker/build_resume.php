@@ -259,23 +259,53 @@ include 'include/config.php'; // DB connection
                                     </button>
                                 </div>
                                 <div class="card-body">
+                                    <?php
+                                    $user_id = $_SESSION['user_id'];
+
+                                    $sql = "SELECT id, degree_level, degree_type, degree_title, major_subjects, country, state, city, institution, date_completion, degree_result, result_type 
+        FROM job_seeker_education 
+        WHERE user_id = '$user_id' 
+        ORDER BY id DESC";
+
+                                    $query = mysqli_query($conn, $sql);
+
+                                    if (!$query) {
+                                        die("SQL Error: " . mysqli_error($conn));
+                                    }
+                                    ?>
+
                                     <div class="" id="education_div">
                                         <ul class="educationList">
-                                            <li><span class="exdot"></span>
-                                                <div class="expbox" id="education_16">
-                                                    <div class="d-flex">
-                                                        <h4>Matriculation/O-Level - Matric in Science</h4>
-                                                        <div class="cvnewbxedit ms-auto"><a href="javascript:void(0);" onclick="showProfileEducationEditModal(16,2610,30525,2);" class="text text-dark"><i class="fas fa-pencil-alt"></i></a> <a href="javascript:void(0);" onclick="delete_profile_education(16);" class="text text-danger ms-2"><i class="fas fa-times"></i></a></div>
+                                            <?php while ($row = mysqli_fetch_assoc($query)): ?>
+                                                <li>
+                                                    <span class="exdot"></span>
+                                                    <div class="expbox" id="education_<?php echo $row['id']; ?>">
+                                                        <div class="d-flex">
+                                                            <h4>
+                                                                <?php echo htmlspecialchars($row['degree_level']); ?> -
+                                                                <?php echo htmlspecialchars($row['degree_title']); ?>
+                                                            </h4>
+                                                            <div class="cvnewbxedit ms-auto">
+                                                                <a href="javascript:void(0);" onclick="showProfileEducationEditModal(<?php echo $row['id']; ?>);" class="text text-dark">
+                                                                    <i class="fas fa-pencil-alt"></i>
+                                                                </a>
+                                                                <a href="delete_education_sql.php?id=<?php echo $row['id']; ?>"
+                                                                    onclick="return confirm('Delete this Education?');"
+                                                                    class="text text-danger ms-2">
+                                                                    <i class="fas fa-times"></i>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                        <div class="date"><?php echo $row['date_completion']; ?> - <?php echo $row['city']; ?> - <?php echo $row['country']; ?></div>
+                                                        <div class="expcomp"><i class="fas fa-graduation-cap"></i> <?php echo $row['degree_type']; ?></div>
+                                                        <div class="expcomp"><i class="fas fa-map-marker-alt"></i> <?php echo $row['city']; ?> - <?php echo $row['country']; ?></div>
+                                                        <div class="expcomp"><i class="fas fa-school"></i> <?php echo $row['institution']; ?></div>
                                                     </div>
-                                                    <div class="date">2005 - Palmerston North - New Zealand</div>
-                                                    <div class="expcomp"><i class="fas fa-graduation-cap"></i> Matric</div>
-                                                    <div class="expcomp"><i class="fas fa-map-marker-alt"></i> Palmerston North - New Zealand</div>
-                                                    <div class="expcomp"><i class="fas fa-school"></i>Govt School</div>
-                                                </div>
-
-                                            </li>
+                                                </li>
+                                            <?php endwhile; ?>
                                         </ul>
                                     </div>
+
                                 </div>
 
                             </div>

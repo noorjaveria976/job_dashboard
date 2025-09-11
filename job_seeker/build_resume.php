@@ -260,20 +260,20 @@ include 'include/config.php'; // DB connection
                                 </div>
                                 <div class="card-body">
                                     <?php
-$user_id = $_SESSION['user_id'];
+                                    $user_id = $_SESSION['user_id'];
 
-$sql = "SELECT id, user_id, degree_level_id, degree_type_id, degree_title, major_subjects, country_id, state_id, city_id, institution, date_completion, degree_result, result_type_id, created_at 
-        FROM job_seeker_education 
-        WHERE user_id = '$user_id' 
-        ORDER BY id DESC";
+                                    $sql = "SELECT id, user_id, degree_level_id, degree_type_id, degree_title, major_subjects, country_id, state_id, city_id, institution, date_completion, degree_result, result_type_id, created_at 
+                                    FROM job_seeker_education 
+                                    WHERE user_id = '$user_id' 
+                                    ORDER BY id DESC";
 
-$query = mysqli_query($conn, $sql);
+                                    $query = mysqli_query($conn, $sql);
 
-// Debug agar query fail ho
-if (!$query) {
-    die("SQL Error in Education Section: " . mysqli_error($conn) . " | Query: " . $sql);
-}
-?>
+                                    // Debug agar query fail ho
+                                    if (!$query) {
+                                        die("SQL Error in Education Section: " . mysqli_error($conn) . " | Query: " . $sql);
+                                    }
+                                    ?>
 
 
                                     <div class="" id="education_div">
@@ -303,10 +303,13 @@ if (!$query) {
                                                         <div class="expcomp"><i class="fas fa-map-marker-alt"></i> <?php echo $row['city_id']; ?> - <?php echo $row['country_id']; ?></div>
                                                         <div class="expcomp"><i class="fas fa-school"></i> <?php echo $row['institution']; ?></div>
                                                     </div>
+                                                    
                                                 </li>
                                             <?php endwhile; ?>
+                                            
                                         </ul>
                                     </div>
+                                    
 
                                 </div>
 
@@ -1676,6 +1679,34 @@ if (!$query) {
                 autoclose: true,
                 todayHighlight: true
             });
+        });
+    </script>
+    <!-- Script for education -->
+    <script>
+        document.getElementById("add_edit_profile_education").addEventListener("submit", function(e) {
+            // Degree Level
+            let degreeLevel = document.getElementById("degree_level_id");
+            degreeLevel.value = degreeLevel.options[degreeLevel.selectedIndex].text;
+
+            // Degree Type
+            let degreeType = document.getElementById("degree_type_id");
+            degreeType.value = degreeType.options[degreeType.selectedIndex].text;
+
+            // Country
+            let country = document.getElementById("education_country_id");
+            country.value = country.options[country.selectedIndex].text;
+
+            // State
+            let state = document.getElementById("education_state_id");
+            state.value = state.options[state.selectedIndex].text;
+
+            // City
+            let city = document.getElementById("city_id");
+            city.value = city.options[city.selectedIndex].text;
+
+            // Result Type
+            let resultType = document.getElementById("result_type_id");
+            resultType.value = resultType.options[resultType.selectedIndex].text;
         });
     </script>
 

@@ -303,13 +303,13 @@ include 'include/config.php'; // DB connection
                                                         <div class="expcomp"><i class="fas fa-map-marker-alt"></i> <?php echo $row['city_id']; ?> - <?php echo $row['country_id']; ?></div>
                                                         <div class="expcomp"><i class="fas fa-school"></i> <?php echo $row['institution']; ?></div>
                                                     </div>
-                                                    
+
                                                 </li>
                                             <?php endwhile; ?>
-                                            
+
                                         </ul>
                                     </div>
-                                    
+
 
                                 </div>
 
@@ -637,7 +637,7 @@ include 'include/config.php'; // DB connection
 </script> -->
 
 
-    <script>
+    <!-- <script>
         var uploadBox = document.getElementById('uploadBox');
         var imageInput = document.getElementById('imageInput');
         var previewImage = document.getElementById('previewImage');
@@ -656,7 +656,7 @@ include 'include/config.php'; // DB connection
                 reader.readAsDataURL(file);
             }
         });
-    </script>
+    </script> -->
 
 
     <!-- JS for Image Upload Preview -->
@@ -750,7 +750,7 @@ include 'include/config.php'; // DB connection
                             </div>
 
                             <div class="formrow" id="div_date_start">
-                                <input class="form-control datepicker" autocomplete="off" id="date_start" placeholder="Experience Start Date" name="date_start" type="date" value="">
+                                <input class="form-control" autocomplete="off" id="date_start" placeholder="Experience Start Date" name="date_start" type="date" value="">
                                 <span class="help-block date_start-error"></span>
                             </div>
 
@@ -765,7 +765,8 @@ include 'include/config.php'; // DB connection
 
 
                             <div class="formrow" id="div_date_end">
-                                <input class="form-control datepicker" autocomplete="off" id="date_end" placeholder="Experience End Date" name="date_end" type="date" value="">
+                                <!-- <input type="date" class="form-control"> -->
+                                <input class="form-control" autocomplete="off" id="date_end" placeholder="Experience End Date" name="date_end" type="date" value="">
                                 <span class="help-block date_end-error"></span>
                             </div>
 
@@ -1404,6 +1405,7 @@ include 'include/config.php'; // DB connection
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
     <!-- General JS Scripts -->
     <script src="assets/js/app.min.js"></script>
     <!-- Template JS File -->
@@ -1651,18 +1653,19 @@ include 'include/config.php'; // DB connection
             $.post("save_experience_sql.php", formData, function(response) {
                 let res = JSON.parse(response);
 
+                // after successful save
                 if (res.success) {
-                    // Refresh list
-                    fetchExperiences();
+                    // refresh list
+                    fetchExperiences(); // or location.reload()
 
-                    // Close modal automatically
-                    const modalEl = document.getElementById('experienceModal');
-                    const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+                    // auto-close bootstrap modal (v5)
+                    let modalEl = document.getElementById('experienceModal');
+                    let modal = bootstrap.Modal.getInstance(modalEl);
+                    if (!modal) modal = new bootstrap.Modal(modalEl);
                     modal.hide();
 
-                    // Reset form
-                    $("#add_edit_profile_experience")[0].reset();
-                    $('#experience_id').val(''); // clear hidden field
+                    // reset form
+                    $('#add_edit_profile_experience')[0].reset();
                 } else {
                     alert("Error: " + res.message);
                 }
@@ -1674,11 +1677,11 @@ include 'include/config.php'; // DB connection
             fetchExperiences();
 
             // Init datepickers
-            $('.datepicker').datepicker({
-                format: "yyyy-mm-dd",
-                autoclose: true,
-                todayHighlight: true
-            });
+            // $('.datepicker').datepicker({
+            //     format: "yyyy-mm-dd",
+            //     autoclose: true,
+            //     todayHighlight: true
+            // });
         });
     </script>
     <!-- Script for education -->

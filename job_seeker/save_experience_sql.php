@@ -7,9 +7,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $title       = mysqli_real_escape_string($conn, $_POST['title']);
     $company     = mysqli_real_escape_string($conn, $_POST['company']);
-    $country     = mysqli_real_escape_string($conn, $_POST['country_text']);
-    $state       = mysqli_real_escape_string($conn, $_POST['state_text']);
-    $city        = mysqli_real_escape_string($conn, $_POST['city_text']);
+    $country     = mysqli_real_escape_string($conn, $_POST['country']);
+    $state       = mysqli_real_escape_string($conn, $_POST['state']);
+    $city        = mysqli_real_escape_string($conn, $_POST['city']);
     $date_start  = mysqli_real_escape_string($conn, $_POST['date_start']);
     $date_end    = mysqli_real_escape_string($conn, $_POST['date_end']);
     $is_current  = isset($_POST['is_currently_working']) ? (int)$_POST['is_currently_working'] : 0;

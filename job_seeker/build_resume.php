@@ -198,7 +198,7 @@ include 'include/config.php'; // DB connection
                                     $user_id = $_SESSION['user_id'];
 
                                     $sql = "
-            SELECT id, title, company, country_id, state_id, city_id, date_start, date_end, is_currently_working, description
+            SELECT id, title, company, country, state, city, date_start, date_end, is_currently_working, description
             FROM job_seeker_experiences
             WHERE user_id = '$user_id'
             ORDER BY id DESC
@@ -215,10 +215,10 @@ include 'include/config.php'; // DB connection
                                             $exp_id = $row['id'];
                                             $title = htmlspecialchars($row['title']);
                                             $company = htmlspecialchars($row['company']);
-                                            $city = htmlspecialchars($row['city_id']);   // abhi id hi aayegi
-                                            $country = htmlspecialchars($row['country_id']); // abhi id hi aayegi
+                                            $city = htmlspecialchars($row['city']);   // abhi id hi aayegi
+                                            $country = htmlspecialchars($row['country']); // abhi id hi aayegi
                                             $date_start = !empty($row['date_start']) ? date('d M, Y', strtotime($row['date_start'])) : '';
-                                            $date_end = ($row['is_currently_working'] == 1) ? 'Present' : (!empty($row['date_end']) ? date('d M, Y', strtotime($row['date_end'])) : '');
+                                            $date_end = ($row['is_currently_working'] == 1) ? 'Currently working' : (!empty($row['date_end']) ? date('d M, Y', strtotime($row['date_end'])) : '');
                                             $description = nl2br(htmlspecialchars($row['description']));
                                     ?>
 
@@ -226,18 +226,19 @@ include 'include/config.php'; // DB connection
                                                 <div class="d-flex">
                                                     <h4><?php echo $title; ?></h4>
                                                     <div class="cvnewbxedit ms-auto">
-                                                        <a href="javascript:void(0);" onclick="showProfileExperienceEditModal(<?php echo $exp_id; ?>, <?php echo $row['city_id']; ?>, <?php echo $row['country_id']; ?>);" class="text text-dark">
+                                                        <a href="javascript:void(0);" onclick="editExperience(<?php echo $exp_id; ?>);" class="text text-dark">
                                                             <i class="fas fa-pencil-alt"></i>
                                                         </a>
+
                                                         <a href="javascript:void(0);" onclick="delete_profile_experience(<?php echo $exp_id; ?>);" class="text text-danger ms-2">
                                                             <i class="fas fa-times"></i>
                                                         </a>
                                                     </div>
                                                 </div>
 
-                                                <div class="excity"><i class="fas fa-map-marker-alt"></i> <?php echo "$city - $country"; ?></div>
-                                                <div class="expcomp"><i class="fas fa-building"></i> <?php echo $company; ?></div>
-                                                <div class="expcomp"><i class="fas fa-calendar-alt"></i> From <?php echo $date_start; ?> - <?php echo $date_end; ?></div>
+                                                <div class="excity mb-2"><i class="fas fa-map-marker-alt me-2"></i> <?php echo "$city - $country"; ?></div>
+                                                <div class="expcomp fw-bold mb-2"><i class="fas fa-building me-2"></i> <?php echo $company; ?></div>
+                                                <div class="expcomp fw-bold mb-2"><i class="fas fa-calendar-alt me-2"></i> From <?php echo $date_start; ?> - <?php echo $date_end; ?></div>
                                                 <p><?php echo $description; ?></p>
                                             </div>
 
@@ -291,11 +292,14 @@ include 'include/config.php'; // DB connection
                                                                 <a href="javascript:void(0);" onclick="showProfileEducationEditModal(<?php echo $row['id']; ?>);" class="text text-dark">
                                                                     <i class="fas fa-pencil-alt"></i>
                                                                 </a>
-                                                                <a href="delete_education_sql.php?id=<?php echo $row['id']; ?>"
+                                                                <a href="javascript:void(0);" onclick="delete_profile_education(<?php echo $exp_id; ?>);" class="text text-danger ms-2">
+                                                                    <i class="fas fa-times"></i>
+                                                                </a>
+                                                                <!-- <a href="delete_education_sql.php?id=<?php echo $row['id']; ?>"
                                                                     onclick="return confirm('Delete this Education?');"
                                                                     class="text text-danger ms-2">
                                                                     <i class="fas fa-times"></i>
-                                                                </a>
+                                                                </a> -->
                                                             </div>
                                                         </div>
                                                         <div class="date"><?php echo $row['date_completion']; ?> - <?php echo $row['city_id']; ?> - <?php echo $row['country_id']; ?></div>
@@ -542,7 +546,7 @@ include 'include/config.php'; // DB connection
         </div>
     </div>
     <!-- modal for add projects -->
-    <!-- Project Modal -->
+
 
     <!-- Project Modal -->
     <div class="modal fade" id="projectModal" tabindex="-1" aria-labelledby="projectModalLabel" aria-hidden="true">
@@ -695,7 +699,7 @@ include 'include/config.php'; // DB connection
                     <h4 class="modal-title">Add Experience</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form class="form" id="add_edit_profile_experience" method="POST" action="save_experience_sql.php">
+                <form class="form" id="experienceForm" method="POST" action="save_experience_sql.php">
                     <!-- <input type="hidden" name="_token" value="6yWsZRaRmexsWsKMZhvrp1XB4w6hgjC2GUPscb02" autocomplete="off"> -->
 
                     <div class="modal-body">
@@ -713,7 +717,7 @@ include 'include/config.php'; // DB connection
                             </div>
 
                             <div class="formrow" id="div_country_id">
-                                <select class="form-control" id="experience_country" name="country">
+                                <select class="form-control" id="country_id" name="country">
                                     <option value="">Select Country</option>
                                     <option value="Afghanistan">Afghanistan</option>
                                     <option value="Albania">Albania</option>
@@ -725,7 +729,7 @@ include 'include/config.php'; // DB connection
                             </div>
 
                             <div class="formrow" id="div_state_id">
-                                <span id="default_state_experience_dd"><select id="experience_state_id" class="form-control" name="state">
+                                <span id="default_state_experience_dd"><select id="state_id" class="form-control" name="state">
                                         <option value="">Select State</option>
                                         <option value="Alabama">Alabama</option>
                                         <option value="Alaska">Alaska</option>
@@ -802,7 +806,10 @@ include 'include/config.php'; // DB connection
                         }
                     </script>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-large btn-primary" onclick="submitProfileExperienceForm();">Save Changes <i class="fa fa-arrow-circle-right" aria-hidden="true"></i></button>
+                        <button type="submit" class="btn btn-large btn-primary">
+                            Save Changes <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+                        </button>
+
                     </div>
                 </form>
             </div>
@@ -1190,42 +1197,42 @@ include 'include/config.php'; // DB connection
     <!-- AJAX for experience -->
     <script>
         // Fetch Experiences
-       function fetchExperiences() {
-    $.get('fetch_experiences_sql.php', function(data) {
-        let experiences = [];
+        function fetchExperiences() {
+            $.get('fetch_experiences_sql.php', function(data) {
+                let experiences = [];
 
-        try {
-            experiences = JSON.parse(data);
-        } catch (e) {
-            console.error("JSON parse error:", e, data);
-            return;
-        }
+                try {
+                    experiences = JSON.parse(data);
+                } catch (e) {
+                    console.error("JSON parse error:", e, data);
+                    return;
+                }
 
-        let html = '';
+                let html = '';
 
-        if (Array.isArray(experiences) && experiences.length > 0) {
-            experiences.forEach(exp => {
-                const endDate = (exp.is_currently_working == 1) 
-                    ? "Present" 
-                    : (exp.date_end && exp.date_end !== "0000-00-00" ? exp.date_end : "N/A");
+                if (Array.isArray(experiences) && experiences.length > 0) {
+                    experiences.forEach(exp => {
+                        const endDate = (exp.is_currently_working == 1) ?
+                            "Currently working" :
+                            (exp.date_end && exp.date_end !== "0000-00-00" ? exp.date_end : "N/A");
 
-                html += `
+                        html += `
                     <div class="experience-item mb-3 p-3 border rounded">
-                        <h5 class="mb-1">${exp.title || ''}</h5>
-                        <p class="mb-1"><strong>${exp.company || ''}</strong></p>
+                        <h5 class="mb-2">${exp.title || ''}</h5>
+                        <p class="mb-2"><strong>${exp.company || ''}</strong></p>
                         <p class="mb-1">${exp.country || ''}, ${exp.state || ''}, ${exp.city || ''}</p>
                         <p class="mb-1">From ${exp.date_start || 'N/A'} - ${endDate}</p>
                         <p class="mb-0">${exp.description || ''}</p>
                     </div>
                 `;
-            });
-        } else {
-            html = "<p>No experiences found.</p>";
-        }
+                    });
+                } else {
+                    html = "<p>No experiences found.</p>";
+                }
 
-        $('#experienceList').html(html);
-    });
-}
+                $('#experienceList').html(html);
+            });
+        }
 
 
 
@@ -1240,40 +1247,45 @@ include 'include/config.php'; // DB connection
                 data: {
                     id: expId
                 },
-                success: function(response) {
-                    const data = JSON.parse(response);
+                dataType: "json", // 👈 ye line important
+                success: function(data) {
                     if (data.success) {
-                        // fill values
+                        console.log("Experience fetched:", data.experience);
                         $('#experience_id').val(data.experience.id);
                         $('#title').val(data.experience.title);
                         $('#company').val(data.experience.company);
-                        $('#experience_country_id').val(data.experience.country_id);
-                        $('#experience_state_id').val(data.experience.state_id);
-                        $('#city_id').val(data.experience.city_id);
 
+                        // Ye text fields hain jo tum DB me save kar rahe ho
+                        $('#country_id').val(data.experience.country);
+                        $('#state_id').val(data.experience.state);
+                        $('#city_id').val(data.experience.city);
 
                         $('#date_start').val(data.experience.date_start);
                         $('#date_end').val(data.experience.date_end);
                         $('input[name="is_currently_working"][value="' + data.experience.is_currently_working + '"]').prop('checked', true);
                         $('#description').val(data.experience.description);
 
-                        // Show/Hide end date row according to radio
+
                         if (data.experience.is_currently_working == 1) {
                             $('#div_date_end').hide();
                         } else {
                             $('#div_date_end').show();
                         }
 
-                        // Show modal
                         const modalEl = document.getElementById('experienceModal');
                         const modal = new bootstrap.Modal(modalEl);
                         modal.show();
                     } else {
                         alert('Experience not found!');
                     }
+                },
+                error: function(xhr, status, error) {
+                    console.error("AJAX Error:", error, xhr.responseText);
                 }
             });
+
         }
+
 
         // Delete experience
         function delete_profile_experience(id) {
@@ -1293,56 +1305,53 @@ include 'include/config.php'; // DB connection
         }
 
 
-        // Submit form (Add/Edit)
-        $('#add_edit_profile_experience').on('submit', function(e) {
+        // Submit Experience Form (Add/Edit)
+        $('#experienceForm').on('submit', function(e) {
             e.preventDefault();
 
-            // Country, State, City ke selected text nikaalo
+            // Country, State, City selected text nikaalna
             const countryText = $('#country_id option:selected').text();
             const stateText = $('#state_id option:selected').text();
             const cityText = $('#city_id option:selected').text();
 
-            // Agar blank hai (user ne "Select" wala option choose kiya hai) to empty string
-            const countryFinal = ($('#country').val() === "") ? "" : countryText;
-            const stateFinal = ($('#state').val() === "") ? "" : stateText;
-            const cityFinal = ($('#city').val() === "") ? "" : cityText;
-
-            // Hidden inputs banakar form me inject karo
+            // Agar user ne blank select kiya hai to empty string save hoga
             $('<input>').attr({
                 type: 'hidden',
                 name: 'country',
-                value: countryFinal
-            }).appendTo('#add_edit_profile_experience');
+                value: countryText
+            }).appendTo('#experienceForm');
             $('<input>').attr({
                 type: 'hidden',
                 name: 'state',
-                value: stateFinal
-            }).appendTo('#add_edit_profile_experience');
+                value: stateText
+            }).appendTo('#experienceForm');
             $('<input>').attr({
                 type: 'hidden',
                 name: 'city',
-                value: cityFinal
-            }).appendTo('#add_edit_profile_experience');
+                value: cityText
+            }).appendTo('#experienceForm');
 
-            // Ab AJAX call karo
+            // AJAX Save
             $.post('save_experience_sql.php', $(this).serialize(), function(response) {
                 try {
                     const res = JSON.parse(response);
                     if (res.success) {
                         alert("Experience Saved Successfully!");
-                        fetchExperiences(); // List refresh
 
-                        // Modal close
-                        let modalEl = document.getElementById('experienceModal');
-                        let modal = bootstrap.Modal.getInstance(modalEl);
-                        if (!modal) modal = new bootstrap.Modal(modalEl);
-                        modal.hide();
+                        // Refresh list
+                        fetchExperiences();
 
                         // Reset form
-                        $('#add_edit_profile_experience')[0].reset();
+                        $('#experienceForm')[0].reset();
+
+                        // Close modal if used
+                        let modalEl = document.getElementById('experienceModal');
+                        if (modalEl) {
+                            let modal = bootstrap.Modal.getInstance(modalEl);
+                            if (!modal) modal = new bootstrap.Modal(modalEl);
+                            modal.hide();
+                        }
                     } else {
-                        console.error("SQL Error:", res.error);
-                        console.error("Query:", res.query);
                         alert("Error: " + res.message);
                     }
                 } catch (err) {
@@ -1354,13 +1363,6 @@ include 'include/config.php'; // DB connection
         // On page load
         $(document).ready(function() {
             fetchExperiences();
-
-            // Init datepickers
-            // $('.datepicker').datepicker({
-            //     format: "yyyy-mm-dd",
-            //     autoclose: true,
-            //     todayHighlight: true
-            // });
         });
     </script>
     <!-- Script for education -->
@@ -1390,6 +1392,22 @@ include 'include/config.php'; // DB connection
             let resultType = document.getElementById("result_type_id");
             resultType.value = resultType.options[resultType.selectedIndex].text;
         });
+        // Delete education
+        function delete_profile_education(id) {
+            if (confirm("Are you sure you want to delete this education?")) {
+                $.post("delete_education_sql.php", {
+                    id: id
+                }, function(response) {
+                    let res = JSON.parse(response);
+                    if (res.success) {
+                        alert(res.message);
+                        location.reload();
+                    } else {
+                        alert("Delete failed: " + res.message);
+                    }
+                });
+            }
+        }
     </script>
 
 

@@ -713,22 +713,22 @@ include 'include/config.php'; // DB connection
                             </div>
 
                             <div class="formrow" id="div_country_id">
-                                <select class="form-control" id="experience_country_id" name="country_id">
+                                <select class="form-control" id="experience_country" name="country">
                                     <option value="">Select Country</option>
-                                    <option value="1">Afghanistan</option>
-                                    <option value="2">Albania</option>
-                                    <option value="3">Algeria</option>
-                                    <option value="4">American Samoa</option>
+                                    <option value="Afghanistan">Afghanistan</option>
+                                    <option value="Albania">Albania</option>
+                                    <option value="Algeria">Algeria</option>
+                                    <option value="American Samoa">American Samoa</option>
 
                                 </select>
                                 <span class="help-block country_id-error"></span>
                             </div>
 
                             <div class="formrow" id="div_state_id">
-                                <span id="default_state_experience_dd"><select id="experience_state_id" class="form-control" name="state_id">
+                                <span id="default_state_experience_dd"><select id="experience_state_id" class="form-control" name="state">
                                         <option value="">Select State</option>
-                                        <option value="3919">Alabama</option>
-                                        <option value="3920">Alaska</option>
+                                        <option value="Alabama">Alabama</option>
+                                        <option value="Alaska">Alaska</option>
 
                                     </select></span>
                                 <span class="help-block state_id-error"></span>
@@ -736,14 +736,14 @@ include 'include/config.php'; // DB connection
 
                             <div class="formrow" id="div_city_id">
                                 <span id="default_city_experience_dd">
-                                    <select class="form-control" id="city_id" name="city_id">
+                                    <select class="form-control" id="city_id" name="city">
                                         <option value="" selected="selected">Select City</option>
-                                        <option value="3921">Arizona</option>
-                                        <option value="3922">Arkansas</option>
-                                        <option value="3923">Byram</option>
-                                        <option value="3924">California</option>
-                                        <option value="3925">Cokato</option>
-                                        <option value="3926">Colorado</option>
+                                        <option value="Arizona">Arizona</option>
+                                        <option value="Arkansas">Arkansas</option>
+                                        <option value="Byram">Byram</option>
+                                        <option value="California">California</option>
+                                        <option value="Cokato">Cokato</option>
+                                        <option value="Colorado">Colorado</option>
                                     </select>
                                 </span>
                                 <span class="help-block city_id-error"></span>
@@ -962,7 +962,7 @@ include 'include/config.php'; // DB connection
         aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
-                <form class="form" id="add_edit_profile_skill" method="POST" action="https://www.sharjeelanjum.com/demos/jobsportal-update/store-front-profile-skill/6"><input type="hidden" name="_token" value="rtLt9mvNx5J5gDNmrhcdV1ZSVZoZegEtQK253C5E" autocomplete="off">
+                <form class="form" id="add_edit_profile_skill" method="POST" action=""><input type="hidden" name="_token" value="rtLt9mvNx5J5gDNmrhcdV1ZSVZoZegEtQK253C5E" autocomplete="off">
                     <div class="modal-header">
                         <h4 class="modal-title">Add Skill</h4>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -970,194 +970,29 @@ include 'include/config.php'; // DB connection
                     <div class="modal-body">
                         <div class="form-body">
                             <div class="formrow mb-3" id="div_job_skill_id">
-                                <select class="form-control" id="job_skill_id" name="job_skill_id">
+                                <select class="form-control" id="job_skill" name="job_skill">
                                     <option value="" selected="selected">Select skill</option>
-                                    <option value="96">Active listening</option>
-                                    <option value="122">Adaptability skills</option>
-                                    <option value="1">Adobe Illustrator</option>
-                                    <option value="2">Adobe Photoshop</option>
-                                    <option value="125">Agile decision-making</option>
-                                    <option value="128">Agility</option>
-                                    <option value="106">Analytical thinking</option>
-                                    <option value="130">Artificial intelligence (AI)</option>
-                                    <option value="100">Artistic abilities</option>
-                                    <option value="111">Attention to detail</option>
-                                    <option value="166">Benchmarking</option>
-                                    <option value="142">Blockchain technology</option>
-                                    <option value="157">Budget management</option>
-                                    <option value="145">Budgeting</option>
-                                    <option value="140">Cloud computing</option>
-                                    <option value="131">Coding languages</option>
-                                    <option value="3">Cold Calling</option>
-                                    <option value="4">COMMUNICATION</option>
-                                    <option value="5">Communication Skills</option>
-                                    <option value="98">Creative thinking</option>
-                                    <option value="86">Creativity</option>
-                                    <option value="118">Crisis management</option>
-                                    <option value="83">Critical Thinking</option>
-                                    <option value="6">CSS</option>
-                                    <option value="77">Customer Service</option>
-                                    <option value="139">Cybersecurity</option>
-                                    <option value="109">Data analysis</option>
-                                    <option value="156">Data entry</option>
-                                    <option value="114">Decision-making</option>
-                                    <option value="101">Design thinking</option>
-                                    <option value="164">Diagnostics</option>
-                                    <option value="162">Documentation</option>
-                                    <option value="97">Effective communication skills</option>
-                                    <option value="80">Engineering</option>
-                                    <option value="7">English Fluency</option>
-                                    <option value="112">Evaluation</option>
-                                    <option value="121">Flexibility</option>
-                                    <option value="149">Forecasting</option>
-                                    <option value="89">Giving &amp; receiving feedback</option>
-                                    <option value="8">HTML</option>
-                                    <option value="105">Idea generation</option>
-                                    <option value="103">Imagination</option>
-                                    <option value="119">Innovation</option>
-                                    <option value="137">Internet of Things (IoT)</option>
-                                    <option value="90">Interpersonal skills</option>
-                                    <option value="81">IT Skills</option>
-                                    <option value="9">Java</option>
-                                    <option value="10">JavaScript</option>
-                                    <option value="11">Jquery</option>
-                                    <option value="113">Judgment</option>
-                                    <option value="144">Kanban</option>
-                                    <option value="95">Leadership skills</option>
-                                    <option value="107">Logical reasoning</option>
-                                    <option value="133">Machine learning</option>
-                                    <option value="12">Marketing</option>
-                                    <option value="79">Marketing Skills</option>
-                                    <option value="158">Mathematical skills</option>
-                                    <option value="138">Mobile development</option>
-                                    <option value="13">MS Excel</option>
-                                    <option value="14">MS Office</option>
-                                    <option value="15">MySQL</option>
-                                    <option value="87">Negotiation</option>
-                                    <option value="134">Networking and wireless technologies</option>
-                                    <option value="102">Open-mindedness</option>
-                                    <option value="124">Openness to change</option>
-                                    <option value="132">Operating systems</option>
-                                    <option value="78">Operations &amp; Logistics Skills</option>
-                                    <option value="99">Originality</option>
-                                    <option value="92">Persuasion</option>
-                                    <option value="16">PHP</option>
-                                    <option value="110">Problem analysis</option>
-                                    <option value="151">Procurement</option>
-                                    <option value="141">Programming</option>
-                                    <option value="154">Project management methodologies</option>
-                                    <option value="153">Project management software</option>
-                                    <option value="146">Project planning</option>
-                                    <option value="147">Project scoping</option>
-                                    <option value="94">Public speaking &amp; presentation skills</option>
-                                    <option value="123">Rapid learning</option>
-                                    <option value="82">Reasoning &amp; Problem-Solving</option>
-                                    <option value="85">Reliability</option>
-                                    <option value="150">Reporting</option>
-                                    <option value="163">Research</option>
-                                    <option value="108">Research skills</option>
-                                    <option value="84">Resilience &amp; Adaptability</option>
-                                    <option value="117">Resourcefulness</option>
-                                    <option value="152">Risk management</option>
-                                    <option value="17">Sales</option>
-                                    <option value="148">Scheduling</option>
-                                    <option value="143">Scrum</option>
-                                    <option value="135">Software development</option>
-                                    <option value="159">Software skills</option>
-                                    <option value="116">Solution orientation</option>
-                                    <option value="160">Statistics</option>
-                                    <option value="88">Storytelling</option>
-                                    <option value="18">Strong Communication skills</option>
-                                    <option value="165">SWOT analysis</option>
-                                    <option value="120">Systems thinking</option>
-                                    <option value="155">Task management</option>
-                                    <option value="91">Teamworking skills</option>
-                                    <option value="127">Tolerance for ambiguity</option>
-                                    <option value="115">Troubleshooting</option>
-                                    <option value="161">Troubleshooting and problem identification</option>
-                                    <option value="129">UI/UX design</option>
-                                    <option value="126">Versatility</option>
-                                    <option value="136">Virtual reality</option>
-                                    <option value="104">Visualization</option>
-                                    <option value="19">WordPress</option>
-                                    <option value="93">Written communication</option>
+                                    <option value="Active listening">Active listening</option>
+                                    <option value="Adaptability skills">Adaptability skills</option>
+                                    <option value="Adobe Illustrator">Adobe Illustrator</option>
+                                    <option value="Adobe Photoshop">Adobe Photoshop</option>
+                                    <option value="Agile decision-making">Agile decision-making</option>
+                                    <option value="Agility">Agility</option>
+
                                 </select> <span class="help-block job_skill_id-error"></span>
                             </div>
                             <div class="formrow" id="div_job_experience_id">
-                                <select class="form-control" id="job_experience_id" name="job_experience_id">
+                                <select class="form-control" id="job_experience" name="job_experience">
                                     <option value="" selected="selected">Select experience</option>
-                                    <option value="11">Fresh</option>
-                                    <option value="12">Less Than 1 Year</option>
-                                    <option value="1">1 Year</option>
-                                    <option value="3">2 years</option>
-                                    <option value="4">3 years</option>
-                                    <option value="5">4 years</option>
-                                    <option value="6">5 years</option>
-                                    <option value="7">6 years</option>
-                                    <option value="8">7 years</option>
-                                    <option value="9">8 years</option>
-                                    <option value="10">9 years</option>
-                                    <option value="2">10 years</option>
-                                    <option value="52">11 years</option>
-                                    <option value="54">12 Years</option>
-                                    <option value="55">13 Years</option>
-                                    <option value="56">14 Years</option>
-                                    <option value="57">15 Years</option>
-                                    <option value="58">16 Years</option>
-                                    <option value="59">17 Years</option>
-                                    <option value="60">18 Years</option>
-                                    <option value="61">19 Years</option>
-                                    <option value="62">20 Years</option>
-                                    <option value="63">21 Years</option>
-                                    <option value="64">22 years</option>
-                                    <option value="65">23 years</option>
-                                    <option value="66">24 Years</option>
-                                    <option value="67">25 Years</option>
-                                    <option value="68">26 Years</option>
-                                    <option value="69">27 Years</option>
-                                    <option value="70">28 Years</option>
-                                    <option value="71">29 Years</option>
-                                    <option value="72">30 years</option>
-                                    <option value="73">31 Years</option>
-                                    <option value="74">32 Years</option>
-                                    <option value="75">33 Years</option>
-                                    <option value="76">34 Years</option>
-                                    <option value="77">35 Years</option>
-                                    <option value="78">36 Years</option>
-                                    <option value="79">37 Years</option>
-                                    <option value="80">38 Years</option>
-                                    <option value="81">39 Years</option>
-                                    <option value="82">40 Years</option>
-                                    <option value="83">41 Years</option>
-                                    <option value="84">42 Years</option>
-                                    <option value="85">43 Years</option>
-                                    <option value="86">44 Years</option>
-                                    <option value="87">45 Years</option>
-                                    <option value="88">46 Years</option>
-                                    <option value="89">47 Years</option>
-                                    <option value="90">48 Years</option>
-                                    <option value="91">49 Years</option>
-                                    <option value="92">50 Years</option>
-                                    <option value="93">51 Years</option>
-                                    <option value="94">52 Years</option>
-                                    <option value="95">53 Years</option>
-                                    <option value="96">54 Years</option>
-                                    <option value="97">55 Years</option>
-                                    <option value="98">56 Years</option>
-                                    <option value="99">57 Years</option>
-                                    <option value="100">58 Years</option>
-                                    <option value="101">59 Years</option>
-                                    <option value="102">60 Years</option>
-                                    <option value="103">61 Years</option>
-                                    <option value="104">62 Years</option>
-                                    <option value="105">63 Years</option>
-                                    <option value="106">64 Years</option>
-                                    <option value="107">65 Years</option>
-                                    <option value="108">66 Years</option>
-                                    <option value="109">67 Years</option>
-                                    <option value="110">68 Years</option>
-                                    <option value="111">70 Years</option>
-                                    <option value="112"></option>
+                                    <option value="Fresh">Fresh</option>
+                                    <option value="Less Than 1 Year">Less Than 1 Year</option>
+                                    <option value="1 Year">1 Year</option>
+                                    <option value="2 years">2 years</option>
+                                    <option value="3 years">3 years</option>
+                                    <option value="4 years">4 years</option>
+                                    <option value="5 years">5 years</option>
+                                    <option value="6 years">6 years</option>
+
                                 </select> <span class="help-block job_experience_id-error"></span>
                             </div>
                         </div>
@@ -1175,7 +1010,7 @@ include 'include/config.php'; // DB connection
         aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
-                <form class="form" id="add_edit_profile_skill" method="POST" action="https://www.sharjeelanjum.com/demos/jobsportal-update/store-front-profile-skill/6"><input type="hidden" name="_token" value="rtLt9mvNx5J5gDNmrhcdV1ZSVZoZegEtQK253C5E" autocomplete="off">
+                <form class="form" id="add_edit_profile_skill" method="POST" action=""><input type="hidden" name="_token" value="rtLt9mvNx5J5gDNmrhcdV1ZSVZoZegEtQK253C5E" autocomplete="off">
                     <div class="modal-header">
                         <h4 class="modal-title">Add Language</h4>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -1183,209 +1018,22 @@ include 'include/config.php'; // DB connection
                     <div class="modal-body">
                         <div class="form-body">
                             <div class="formrow mb-3" id="div_language_id">
-                                <select class="form-control" id="language_id" name="language_id">
+                                <select class="form-control" id="language" name="language">
                                     <option value="" selected="selected">Select language</option>
-                                    <option value="2">Abkhazian</option>
-                                    <option value="3">Afar</option>
-                                    <option value="4">Afrikaans</option>
-                                    <option value="5">Akan</option>
-                                    <option value="6">Albanian</option>
-                                    <option value="7">Amharic</option>
-                                    <option value="8">Arabic</option>
-                                    <option value="9">Aragonese</option>
-                                    <option value="10">Armenian</option>
-                                    <option value="11">Assamese</option>
-                                    <option value="12">Avaric</option>
-                                    <option value="13">Avestan</option>
-                                    <option value="14">Aymara</option>
-                                    <option value="15">Azerbaijani</option>
-                                    <option value="16">Bambara</option>
-                                    <option value="17">Bashkir</option>
-                                    <option value="18">Basque</option>
-                                    <option value="19">Belarusian</option>
-                                    <option value="20">Bengali (Bangla)</option>
-                                    <option value="21">Bihari</option>
-                                    <option value="22">Bislama</option>
-                                    <option value="23">Bosnian</option>
-                                    <option value="24">Breton</option>
-                                    <option value="25">Bulgarian</option>
-                                    <option value="26">Burmese</option>
-                                    <option value="27">Catalan</option>
-                                    <option value="28">Chamorro</option>
-                                    <option value="29">Chechen</option>
-                                    <option value="30">Chichewa, Chewa, Nyanja</option>
-                                    <option value="31">Chinese</option>
-                                    <option value="32">Chinese (Simplified)</option>
-                                    <option value="33">Chinese (Traditional)</option>
-                                    <option value="34">Chuvash</option>
-                                    <option value="35">Cornish</option>
-                                    <option value="36">Corsican</option>
-                                    <option value="37">Cree</option>
-                                    <option value="38">Croatian</option>
-                                    <option value="39">Czech</option>
-                                    <option value="40">Danish</option>
-                                    <option value="41">Divehi, Dhivehi, Maldivian</option>
-                                    <option value="42">Dutch</option>
-                                    <option value="43">Dzongkha</option>
-                                    <option value="44">English</option>
-                                    <option value="45">Esperanto</option>
-                                    <option value="46">Estonian</option>
-                                    <option value="47">Ewe</option>
-                                    <option value="48">Faroese</option>
-                                    <option value="49">Fijian</option>
-                                    <option value="50">Finnish</option>
-                                    <option value="51">French</option>
-                                    <option value="52">Fula, Fulah, Pulaar, Pular</option>
-                                    <option value="53">Galician</option>
-                                    <option value="54">Gaelic (Scottish)</option>
-                                    <option value="55">Gaelic (Manx)</option>
-                                    <option value="56">Georgian</option>
-                                    <option value="57">German</option>
-                                    <option value="58">Greek</option>
-                                    <option value="59">Greenlandic</option>
-                                    <option value="60">Guarani</option>
-                                    <option value="61">Gujarati</option>
-                                    <option value="62">Haitian Creole</option>
-                                    <option value="63">Hausa</option>
-                                    <option value="64">Hebrew</option>
-                                    <option value="65">Herero</option>
-                                    <option value="66">Hindi</option>
-                                    <option value="67">Hiri Motu</option>
-                                    <option value="68">Hungarian</option>
-                                    <option value="69">Icelandic</option>
-                                    <option value="70">Ido</option>
-                                    <option value="71">Igbo</option>
-                                    <option value="72">Indonesian</option>
-                                    <option value="73">Interlingua</option>
-                                    <option value="74">Interlingue</option>
-                                    <option value="75">Inuktitut</option>
-                                    <option value="76">Inupiak</option>
-                                    <option value="77">Irish</option>
-                                    <option value="78">Italian</option>
-                                    <option value="79">Japanese</option>
-                                    <option value="80">Javanese</option>
-                                    <option value="81">Kalaallisut, Greenlandic</option>
-                                    <option value="82">Kannada</option>
-                                    <option value="83">Kanuri</option>
-                                    <option value="84">Kashmiri</option>
-                                    <option value="85">Kazakh</option>
-                                    <option value="86">Khmer</option>
-                                    <option value="87">Kikuyu</option>
-                                    <option value="88">Kinyarwanda (Rwanda)</option>
-                                    <option value="89">Kirundi</option>
-                                    <option value="90">Kyrgyz</option>
-                                    <option value="91">Komi</option>
-                                    <option value="92">Kongo</option>
-                                    <option value="93">Korean</option>
-                                    <option value="94">Kurdish</option>
-                                    <option value="95">Kwanyama</option>
-                                    <option value="96">Lao</option>
-                                    <option value="97">Latin</option>
-                                    <option value="98">Latvian (Lettish)</option>
-                                    <option value="99">Limburgish ( Limburger)</option>
-                                    <option value="100">Lingala</option>
-                                    <option value="101">Lithuanian</option>
-                                    <option value="102">Luga-Katanga</option>
-                                    <option value="103">Luganda, Ganda</option>
-                                    <option value="104">Luxembourgish</option>
-                                    <option value="105">Manx</option>
-                                    <option value="106">Macedonian</option>
-                                    <option value="107">Malagasy</option>
-                                    <option value="108">Malay</option>
-                                    <option value="109">Malayalam</option>
-                                    <option value="110">Maltese</option>
-                                    <option value="111">Maori</option>
-                                    <option value="112">Marathi</option>
-                                    <option value="113">Marshallese</option>
-                                    <option value="114">Moldavian</option>
-                                    <option value="115">Mongolian</option>
-                                    <option value="116">Nauru</option>
-                                    <option value="117">Navajo</option>
-                                    <option value="118">Ndonga</option>
-                                    <option value="119">Northern Ndebele</option>
-                                    <option value="120">Nepali</option>
-                                    <option value="121">Norwegian</option>
-                                    <option value="122">Norwegian bokmål</option>
-                                    <option value="123">Norwegian nynorsk</option>
-                                    <option value="124">Nuosu</option>
-                                    <option value="125">Occitan</option>
-                                    <option value="126">Ojibwe</option>
-                                    <option value="127">Old Church Slavonic, Old Bulgarian</option>
-                                    <option value="128">Oriya</option>
-                                    <option value="129">Oromo (Afaan Oromo)</option>
-                                    <option value="130">Ossetian</option>
-                                    <option value="131">P?li</option>
-                                    <option value="132">Pashto, Pushto</option>
-                                    <option value="133">Persian (Farsi)</option>
-                                    <option value="134">Polish</option>
-                                    <option value="135">Portuguese</option>
-                                    <option value="136">Punjabi (Eastern)</option>
-                                    <option value="137">Quechua</option>
-                                    <option value="138">Romansh</option>
-                                    <option value="139">Romanian</option>
-                                    <option value="140">Russian</option>
-                                    <option value="141">Sami</option>
-                                    <option value="142">Samoan</option>
-                                    <option value="143">Sango</option>
-                                    <option value="144">Sanskrit</option>
-                                    <option value="145">Serbian</option>
-                                    <option value="146">Serbo-Croatian</option>
-                                    <option value="147">Sesotho</option>
-                                    <option value="148">Setswana</option>
-                                    <option value="149">Shona</option>
-                                    <option value="150">Sichuan Yi</option>
-                                    <option value="151">Sindhi</option>
-                                    <option value="152">Sinhalese</option>
-                                    <option value="153">Siswati</option>
-                                    <option value="154">Slovak</option>
-                                    <option value="155">Slovenian</option>
-                                    <option value="156">Somali</option>
-                                    <option value="157">Southern Ndebele</option>
-                                    <option value="158">Spanish</option>
-                                    <option value="159">Sundanese</option>
-                                    <option value="160">Swahili (Kiswahili)</option>
-                                    <option value="161">Swati</option>
-                                    <option value="162">Swedish</option>
-                                    <option value="163">Tagalog</option>
-                                    <option value="164">Tahitian</option>
-                                    <option value="165">Tajik</option>
-                                    <option value="166">Tamil</option>
-                                    <option value="167">Tatar</option>
-                                    <option value="168">Telugu</option>
-                                    <option value="169">Thai</option>
-                                    <option value="170">Tibetan</option>
-                                    <option value="171">Tigrinya</option>
-                                    <option value="172">Tonga</option>
-                                    <option value="173">Tsonga</option>
-                                    <option value="174">Turkish</option>
-                                    <option value="175">Turkmen</option>
-                                    <option value="176">Twi</option>
-                                    <option value="177">Uyghur</option>
-                                    <option value="178">Ukrainian</option>
-                                    <option value="179">Urdu</option>
-                                    <option value="180">Uzbek</option>
-                                    <option value="181">Venda</option>
-                                    <option value="182">Vietnamese</option>
-                                    <option value="183">Volapük</option>
-                                    <option value="184">Wallon</option>
-                                    <option value="185">Welsh</option>
-                                    <option value="186">Wolof</option>
-                                    <option value="187">Western Frisian</option>
-                                    <option value="188">Xhosa</option>
-                                    <option value="189">Yiddish</option>
-                                    <option value="190">Yoruba</option>
-                                    <option value="191">Zhuang, Chuang</option>
-                                    <option value="192">Zulu</option>
-                                    <option value="193">French</option>
-                                    <option value="195">Nederlands</option>
+                                    <option value="Abkhazian">Abkhazian</option>
+                                    <option value="Afar">Afar</option>
+                                    <option value="Afrikaans">Afrikaans</option>
+                                    <option value="Akan">Akan</option>
+                                    <option value="Albanian">Albanian</option>
+
                                 </select> <span class="help-block language_id-error"></span>
                             </div>
                             <div class="formrow" id="div_language_level_id">
-                                <select class="form-control" id="language_level_id" name="language_level_id">
+                                <select class="form-control" id="language_level" name="language_level">
                                     <option value="" selected="selected">Select Language Level</option>
-                                    <option value="2">Intermediate</option>
-                                    <option value="1">Beginner</option>
-                                    <option value="3">Expert</option>
+                                    <option value="Intermediate">Intermediate</option>
+                                    <option value="Beginner">Beginner</option>
+                                    <option value="Expert">Expert</option>
                                 </select> <span class="help-block language_level_id-error"></span>
                             </div>
                         </div>
@@ -1542,47 +1190,46 @@ include 'include/config.php'; // DB connection
     <!-- AJAX for experience -->
     <script>
         // Fetch Experiences
-        function fetchExperiences() {
-            $.get('fetch_experiences_sql.php', function(data) {
-                const experiences = JSON.parse(data);
-                let html = '';
+       function fetchExperiences() {
+    $.get('fetch_experiences_sql.php', function(data) {
+        let experiences = [];
 
-                experiences.forEach(exp => {
-                    const endDate = (exp.is_currently_working == 1) ? "Present" : (exp.date_end || "N/A");
-
-                    html += `
-             <li>
-                 <span class="exdot"></span>
-                 <div class="expbox" id="experience_${exp.id}">
-                     <div class="d-flex">
-                         <h4>${exp.title || ''}</h4>
-                         <div class="cvnewbxedit ms-auto">
-                             <a href="javascript:void(0);" onclick="editExperience(${exp.id});" class="text text-dark">
-                                 <i class="fas fa-pencil-alt"></i>
-                             </a> 
-                             <a href="javascript:void(0);" onclick="delete_profile_experience(${exp.id});" class="text text-danger ms-2">
-                                 <i class="fas fa-times"></i>
-                             </a>
-                         </div>
-                     </div>
-                     <div class="excity">
-                         <i class="fas fa-map-marker-alt"></i> ${exp.city_name || ''} - ${exp.country_name || ''}
-                     </div>
-                     <div class="expcomp"><i class="fas fa-building"></i> ${exp.company || ''}</div>
-                     <div class="expcomp"><i class="fas fa-calendar-alt"></i> From ${exp.date_start || ''} - ${endDate}</div>
-                     <p>${exp.description || ''}</p>
-                 </div>
-             </li>
-             `;
-                });
-
-                if (html === '') {
-                    html = '<li><p>No experiences added yet.</p></li>';
-                }
-
-                $('#experience_div .experienceList').html(html);
-            });
+        try {
+            experiences = JSON.parse(data);
+        } catch (e) {
+            console.error("JSON parse error:", e, data);
+            return;
         }
+
+        let html = '';
+
+        if (Array.isArray(experiences) && experiences.length > 0) {
+            experiences.forEach(exp => {
+                const endDate = (exp.is_currently_working == 1) 
+                    ? "Present" 
+                    : (exp.date_end && exp.date_end !== "0000-00-00" ? exp.date_end : "N/A");
+
+                html += `
+                    <div class="experience-item mb-3 p-3 border rounded">
+                        <h5 class="mb-1">${exp.title || ''}</h5>
+                        <p class="mb-1"><strong>${exp.company || ''}</strong></p>
+                        <p class="mb-1">${exp.country || ''}, ${exp.state || ''}, ${exp.city || ''}</p>
+                        <p class="mb-1">From ${exp.date_start || 'N/A'} - ${endDate}</p>
+                        <p class="mb-0">${exp.description || ''}</p>
+                    </div>
+                `;
+            });
+        } else {
+            html = "<p>No experiences found.</p>";
+        }
+
+        $('#experienceList').html(html);
+    });
+}
+
+
+
+
 
         // Edit experience
         function editExperience(expId) {
@@ -1647,30 +1294,62 @@ include 'include/config.php'; // DB connection
 
 
         // Submit form (Add/Edit)
-        function submitProfileExperienceForm() {
-            const formData = $("#add_edit_profile_experience").serialize();
+        $('#add_edit_profile_experience').on('submit', function(e) {
+            e.preventDefault();
 
-            $.post("save_experience_sql.php", formData, function(response) {
-                let res = JSON.parse(response);
+            // Country, State, City ke selected text nikaalo
+            const countryText = $('#country_id option:selected').text();
+            const stateText = $('#state_id option:selected').text();
+            const cityText = $('#city_id option:selected').text();
 
-                // after successful save
-                if (res.success) {
-                    // refresh list
-                    fetchExperiences(); // or location.reload()
+            // Agar blank hai (user ne "Select" wala option choose kiya hai) to empty string
+            const countryFinal = ($('#country').val() === "") ? "" : countryText;
+            const stateFinal = ($('#state').val() === "") ? "" : stateText;
+            const cityFinal = ($('#city').val() === "") ? "" : cityText;
 
-                    // auto-close bootstrap modal (v5)
-                    let modalEl = document.getElementById('experienceModal');
-                    let modal = bootstrap.Modal.getInstance(modalEl);
-                    if (!modal) modal = new bootstrap.Modal(modalEl);
-                    modal.hide();
+            // Hidden inputs banakar form me inject karo
+            $('<input>').attr({
+                type: 'hidden',
+                name: 'country',
+                value: countryFinal
+            }).appendTo('#add_edit_profile_experience');
+            $('<input>').attr({
+                type: 'hidden',
+                name: 'state',
+                value: stateFinal
+            }).appendTo('#add_edit_profile_experience');
+            $('<input>').attr({
+                type: 'hidden',
+                name: 'city',
+                value: cityFinal
+            }).appendTo('#add_edit_profile_experience');
 
-                    // reset form
-                    $('#add_edit_profile_experience')[0].reset();
-                } else {
-                    alert("Error: " + res.message);
+            // Ab AJAX call karo
+            $.post('save_experience_sql.php', $(this).serialize(), function(response) {
+                try {
+                    const res = JSON.parse(response);
+                    if (res.success) {
+                        alert("Experience Saved Successfully!");
+                        fetchExperiences(); // List refresh
+
+                        // Modal close
+                        let modalEl = document.getElementById('experienceModal');
+                        let modal = bootstrap.Modal.getInstance(modalEl);
+                        if (!modal) modal = new bootstrap.Modal(modalEl);
+                        modal.hide();
+
+                        // Reset form
+                        $('#add_edit_profile_experience')[0].reset();
+                    } else {
+                        console.error("SQL Error:", res.error);
+                        console.error("Query:", res.query);
+                        alert("Error: " + res.message);
+                    }
+                } catch (err) {
+                    console.error("Invalid JSON Response:", response);
                 }
             });
-        }
+        });
 
         // On page load
         $(document).ready(function() {

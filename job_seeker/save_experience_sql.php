@@ -19,7 +19,7 @@ if ($experience_id) {
     // 🔹 Update existing record
     $sql = "UPDATE job_seeker_experiences 
             SET title=?, company=?, country=?, state=?, city=?, 
-                date_start=?, date_end=?, is_currently_working=?, description=?,
+                date_start=?, date_end=?, is_currently_working=?, `description`=?,
                 updated_at=NOW()
             WHERE id=? AND user_id=?";
     $stmt = $conn->prepare($sql);
@@ -31,7 +31,7 @@ if ($experience_id) {
 } else {
     // 🔹 Insert new record
     $sql = "INSERT INTO job_seeker_experiences 
-            (user_id, title, company, country, state, city, date_start, date_end, is_currently_working, description, created_at, updated_at) 
+            (user_id, title, company, country, state, city, date_start, date_end, is_currently_working, `description`, created_at, updated_at) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("isssssssis", 

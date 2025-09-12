@@ -292,6 +292,7 @@ include 'include/config.php'; // DB connection
                                                                 <a href="javascript:void(0);" onclick="edit_profile_education(<?php echo $row['id']; ?>);" class="text text-dark">
                                                                     <i class="fas fa-pencil-alt"></i>
                                                                 </a>
+
                                                                 <a href="javascript:void(0);" onclick="delete_profile_education(<?php echo $row['id']; ?>);" class="text text-danger ms-2">
                                                                     <i class="fas fa-times"></i>
                                                                 </a>
@@ -830,6 +831,8 @@ include 'include/config.php'; // DB connection
                     </div>
                     <div class="modal-body">
                         <div class="form-body">
+                            <input type="hidden" name="id" id="edu_id">
+
                             <div class="formrow" id="div_degree_level_id">
                                 <select class="form-control" id="degree_level_id" name="degree_level_id">
                                     <option value="" selected="selected">Select Degree Level</option>
@@ -1240,46 +1243,52 @@ include 'include/config.php'; // DB connection
 
 
         // Edit experience
-        function editExperience(id) {
-            fetch("get_experience_sql.php?id=" + id)
-                .then(res => res.json())
-                .then(response => {
-                    if (response.success && response.data) {
-                        const exp = response.data;
+        function editExperience(expId) {
+            console.log("Experience ID:", expId);
+            $.ajax({
+                url: "get_experience_sql.php",
+                type: "GET",
+                data: {
+                    id: expId
+                },
+                dataType: "json", // 👈 ye line important
+                success: function(data) {
+                    if (data.success) {
+                        console.log("Experience fetched:", data.experience);
+                        $('#experience_id').val(data.experience.id);
+                        $('#title').val(data.experience.title);
+                        $('#company').val(data.experience.company);
 
-                        // Hidden field for update
-                        document.getElementById("experience_id").value = exp.id;
+                        // Ye text fields hain jo tum DB me save kar rahe ho
+                        $('#country_id').val(data.experience.country);
+                        $('#state_id').val(data.experience.state);
+                        $('#city_id').val(data.experience.city);
 
-                        // Text fields
-                        document.getElementById("title").value = exp.title;
-                        document.getElementById("company").value = exp.company;
-                        document.getElementById("country").value = exp.country;
-                        document.getElementById("state").value = exp.state;
-                        document.getElementById("city").value = exp.city;
+                        $('#date_start').val(data.experience.date_start);
+                        $('#date_end').val(data.experience.date_end);
+                        $('input[name="is_currently_working"][value="' + data.experience.is_currently_working + '"]').prop('checked', true);
+                        $('#description').val(data.experience.description);
 
-                        // Dates
-                        document.getElementById("date_start").value = exp.date_start;
-                        document.getElementById("date_end").value = exp.date_end;
 
-                        // Checkbox
-                        document.getElementById("is_currently_working").checked = (exp.is_currently_working == 1);
+                        if (data.experience.is_currently_working == 1) {
+                            $('#div_date_end').hide();
+                        } else {
+                            $('#div_date_end').show();
+                        }
 
-                        // Description (textarea)
-                        document.getElementById("description").value = exp.description;
-
-                        // Show modal
                         const modalEl = document.getElementById('experienceModal');
                         const modal = new bootstrap.Modal(modalEl);
                         modal.show();
                     } else {
-                        alert("Experience not found!");
+                        alert('Experience not found!');
                     }
-                })
-                .catch(err => {
-                    console.error("Invalid JSON from get_experience_sql.php:", err);
-                });
-        }
+                },
+                error: function(xhr, status, error) {
+                    console.error("AJAX Error:", error, xhr.responseText);
+                }
+            });
 
+        }
 
 
         // Delete experience
@@ -1402,6 +1411,45 @@ include 'include/config.php'; // DB connection
                     }
                 });
             }
+        }
+        // Edit education
+        function edit_profile_education(id) {
+            $.post("fetch_education_sql.php", {
+                id: id
+            }, function(response) {
+                let res = JSON.parse(response);
+                if (res.success) {
+                    // Set hidden id
+                    $("#edu_id").val(res.data.id);
+
+                    // Fill fields
+                    $("#degree_level_id").val(res.data.degree_level_id);
+                    $("#degree_type_id").val(res.data.degree_type_id);
+                    $("#degree_title").val(res.data.degree_title);
+                    $("#education_country_id").val(res.data.country_id);
+                    $("#education_state_id").val(res.data.state_id);
+                    $("#city_id").val(res.data.city_id);
+                    $("#institution").val(res.data.institution);
+                    $("#date_completion").val(res.data.date_completion);
+                    $("#degree_result").val(res.data.degree_result);
+                    $("#result_type_id").val(res.data.result_type_id);
+
+                    // Change modal title
+                    $(".modal-title").text("Edit Education");
+
+                    // Show modal
+                    $("#educationModal").modal("show");
+                } else {
+                    alert("Failed: " + res.message);
+                }
+            });
+        }
+
+        function add_new_education() {
+            $("#add_edit_profile_education")[0].reset();
+            $("#edu_id").val(""); // clear hidden id
+            $(".modal-title").text("Add Education");
+            $("#educationModal").modal("show");
         }
     </script>
 

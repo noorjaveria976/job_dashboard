@@ -289,12 +289,13 @@ include 'include/config.php'; // DB connection
                                                                 <?php echo htmlspecialchars($row['degree_title']); ?>
                                                             </h4>
                                                             <div class="cvnewbxedit ms-auto">
-                                                                <a href="javascript:void(0);" onclick="showProfileEducationEditModal(<?php echo $row['id']; ?>);" class="text text-dark">
+                                                                <a href="javascript:void(0);" onclick="edit_profile_education(<?php echo $row['id']; ?>);" class="text text-dark">
                                                                     <i class="fas fa-pencil-alt"></i>
                                                                 </a>
-                                                                <a href="javascript:void(0);" onclick="delete_profile_education(<?php echo $exp_id; ?>);" class="text text-danger ms-2">
+                                                                <a href="javascript:void(0);" onclick="delete_profile_education(<?php echo $row['id']; ?>);" class="text text-danger ms-2">
                                                                     <i class="fas fa-times"></i>
                                                                 </a>
+
                                                                 <!-- <a href="delete_education_sql.php?id=<?php echo $row['id']; ?>"
                                                                     onclick="return confirm('Delete this Education?');"
                                                                     class="text text-danger ms-2">
@@ -1239,52 +1240,46 @@ include 'include/config.php'; // DB connection
 
 
         // Edit experience
-        function editExperience(expId) {
-            console.log("Experience ID:", expId);
-            $.ajax({
-                url: "get_experience_sql.php",
-                type: "GET",
-                data: {
-                    id: expId
-                },
-                dataType: "json", // 👈 ye line important
-                success: function(data) {
-                    if (data.success) {
-                        console.log("Experience fetched:", data.experience);
-                        $('#experience_id').val(data.experience.id);
-                        $('#title').val(data.experience.title);
-                        $('#company').val(data.experience.company);
+        function editExperience(id) {
+            fetch("get_experience_sql.php?id=" + id)
+                .then(res => res.json())
+                .then(response => {
+                    if (response.success && response.data) {
+                        const exp = response.data;
 
-                        // Ye text fields hain jo tum DB me save kar rahe ho
-                        $('#country_id').val(data.experience.country);
-                        $('#state_id').val(data.experience.state);
-                        $('#city_id').val(data.experience.city);
+                        // Hidden field for update
+                        document.getElementById("experience_id").value = exp.id;
 
-                        $('#date_start').val(data.experience.date_start);
-                        $('#date_end').val(data.experience.date_end);
-                        $('input[name="is_currently_working"][value="' + data.experience.is_currently_working + '"]').prop('checked', true);
-                        $('#description').val(data.experience.description);
+                        // Text fields
+                        document.getElementById("title").value = exp.title;
+                        document.getElementById("company").value = exp.company;
+                        document.getElementById("country").value = exp.country;
+                        document.getElementById("state").value = exp.state;
+                        document.getElementById("city").value = exp.city;
 
+                        // Dates
+                        document.getElementById("date_start").value = exp.date_start;
+                        document.getElementById("date_end").value = exp.date_end;
 
-                        if (data.experience.is_currently_working == 1) {
-                            $('#div_date_end').hide();
-                        } else {
-                            $('#div_date_end').show();
-                        }
+                        // Checkbox
+                        document.getElementById("is_currently_working").checked = (exp.is_currently_working == 1);
 
+                        // Description (textarea)
+                        document.getElementById("description").value = exp.description;
+
+                        // Show modal
                         const modalEl = document.getElementById('experienceModal');
                         const modal = new bootstrap.Modal(modalEl);
                         modal.show();
                     } else {
-                        alert('Experience not found!');
+                        alert("Experience not found!");
                     }
-                },
-                error: function(xhr, status, error) {
-                    console.error("AJAX Error:", error, xhr.responseText);
-                }
-            });
-
+                })
+                .catch(err => {
+                    console.error("Invalid JSON from get_experience_sql.php:", err);
+                });
         }
+
 
 
         // Delete experience

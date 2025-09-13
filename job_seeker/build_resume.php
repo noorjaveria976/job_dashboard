@@ -51,7 +51,7 @@ include 'include/config.php'; // DB connection
                             <!-- Personal Information -->
                             <!-- cv -->
                             <div class="card">
-                                <div class="card-header">
+                                <div class="card-header d-flex justify-content-between align-items-center">
                                     <h4>Attached CV</h4>
                                     <button type="button" class="btn" data-toggle="modal" data-target="#exampleModal"><i class="fas fa-plus"></i>
                                     </button>
@@ -129,6 +129,17 @@ include 'include/config.php'; // DB connection
                                 </div>
                             </div>
                             <!-- Projects -->
+                            <?php
+                            
+                            $user_id = $_SESSION['user_id']; // current logged-in user ka id
+
+                            $sql = "SELECT * FROM projects WHERE user_id = '$user_id' ORDER BY created_at DESC";
+                            $query = mysqli_query($conn, $sql);
+
+                            if (!$query) {
+                                die("SQL Error in Projects Section: " . mysqli_error($conn) . " | Query: " . $sql);
+                            }
+                            ?>
                             <div class="card">
                                 <div class="card-header d-flex justify-content-between align-items-center">
                                     <h4 onclick="showProjects();">Projects</h4>
@@ -141,52 +152,46 @@ include 'include/config.php'; // DB connection
                                     <div id="projects_div">
                                         <table class="table">
                                             <tbody class="d-flex flex-wrap">
-                                                <?php
-                                                include 'include/config.php'; // Database connection
-
-                                                $query = mysqli_query($conn, "SELECT * FROM projects ORDER BY created_at DESC");
-                                                if (mysqli_num_rows($query) > 0) {
-                                                    while ($row = mysqli_fetch_assoc($query)) {
-                                                        $id = $row['id'];
-                                                        $name = htmlspecialchars($row['name']);
-                                                        $image = !empty($row['image']) ? $row['image'] : 'default.png';
-                                                        $date_start = !empty($row['date_start']) ? date('d M, Y', strtotime($row['date_start'])) : '';
-                                                        $date_end = !empty($row['date_end']) ? date('d M, Y', strtotime($row['date_end'])) : '';
-                                                        $description = htmlspecialchars($row['description']);
-                                                ?>
-
+                                                <?php if (mysqli_num_rows($query) > 0): ?>
+                                                    <?php while ($row = mysqli_fetch_assoc($query)): ?>
                                                         <tr class="d-flex flex-column border rounded p-2 m-2" style="width:220px;">
                                                             <td class="mb-2 text-center">
-                                                                <img src="<?php echo $image; ?>"
-                                                                    alt="<?php echo $name; ?>"
-                                                                    title="<?php echo $name; ?>"
+                                                                <img src="<?php echo htmlspecialchars($row['image']); ?>"
+                                                                    alt="<?php echo htmlspecialchars($row['name']); ?>"
+                                                                    title="<?php echo htmlspecialchars($row['name']); ?>"
                                                                     style="max-width:120px;">
                                                             </td>
                                                             <td>
-                                                                <strong><?php echo $name; ?></strong><br>
-                                                                <small><?php echo $date_start . ($date_end ? ' - ' . $date_end : ''); ?></small><br>
-                                                                <?php echo $description; ?>
+                                                                <strong><?php echo htmlspecialchars($row['name']); ?></strong><br>
+                                                                <small>
+                                                                    <?php
+                                                                    $date_start = !empty($row['date_start']) ? date('d M, Y', strtotime($row['date_start'])) : '';
+                                                                    $date_end   = !empty($row['date_end']) ? date('d M, Y', strtotime($row['date_end'])) : '';
+                                                                    echo $date_start . ($date_end ? ' - ' . $date_end : '');
+                                                                    ?>
+                                                                </small><br>
+                                                                <?php echo htmlspecialchars($row['description']); ?>
                                                             </td>
                                                             <td class="pt-5">
-                                                                <a class="text-info" href="javascript:void(0);" onclick="showProfileProjectEditModal(<?php echo $id; ?>);">Edit</a> |
-                                                                <a class="text-danger" href="javascript:void(0);" onclick="delete_profile_project(<?php echo $id; ?>);">Delete</a>
+                                                                <a class="text-info" href="javascript:void(0);" onclick="showProfileProjectEditModal(<?php echo $row['id']; ?>);">Edit</a> |
+                                                                <a class="text-danger" href="javascript:void(0);" onclick="delete_profile_project(<?php echo $row['id']; ?>);">Delete</a>
                                                             </td>
                                                         </tr>
-
-                                                <?php
-                                                    }
-                                                } else {
-                                                    echo "<tr><td>No projects found.</td></tr>";
-                                                }
-                                                ?>
+                                                    <?php endwhile; ?>
+                                                <?php else: ?>
+                                                    <tr>
+                                                        <td class="text-center">No projects added yet.</td>
+                                                    </tr>
+                                                <?php endif; ?>
                                             </tbody>
                                         </table>
                                     </div>
                                 </div>
                             </div>
+
                             <!-- experience -->
                             <div class="card">
-                                <div class="card-header">
+                                <div class="card-header d-flex justify-content-between align-items-center">
                                     <h4>Experience</h4>
                                     <button type="button" class="btn" data-toggle="modal" data-target="#experienceModal">
                                         <i class="fas fa-plus"></i>
@@ -198,11 +203,11 @@ include 'include/config.php'; // DB connection
                                     $user_id = $_SESSION['user_id'];
 
                                     $sql = "
-            SELECT id, title, company, country, state, city, date_start, date_end, is_currently_working, description
-            FROM job_seeker_experiences
-            WHERE user_id = '$user_id'
-            ORDER BY id DESC
-        ";
+                                          SELECT id, title, company, country, state, city, date_start, date_end, is_currently_working, description
+                                          FROM job_seeker_experiences
+                                          WHERE user_id = '$user_id'
+                                          ORDER BY id DESC
+                                      ";
 
                                     $query = mysqli_query($conn, $sql);
 
@@ -254,9 +259,10 @@ include 'include/config.php'; // DB connection
 
                             <!-- education -->
                             <div class="card">
-                                <div class="card-header">
+                                <div class="card-header d-flex justify-content-between align-items-center">
                                     <h4 onclick="showEducation();">Education</h4>
-                                    <button type="button" class="btn" data-toggle="modal" data-target="#educationModal"><i class="fas fa-plus"></i>
+                                    <button type="button" class="btn" data-toggle="modal" data-target="#educationModal">
+                                        <i class="fas fa-plus"></i>
                                     </button>
                                 </div>
                                 <div class="card-body">
@@ -276,128 +282,150 @@ include 'include/config.php'; // DB connection
                                     }
                                     ?>
 
+                                    <div id="education_div">
+                                        <?php if (mysqli_num_rows($query) > 0): ?>
+                                            <ul class="educationList">
+                                                <?php while ($row = mysqli_fetch_assoc($query)): ?>
+                                                    <li>
+                                                        <span class="exdot"></span>
+                                                        <div class="expbox" id="education_<?php echo $row['id']; ?>">
+                                                            <div class="d-flex">
+                                                                <h4>
+                                                                    <?php echo htmlspecialchars($row['degree_level_id']); ?> -
+                                                                    <?php echo htmlspecialchars($row['degree_title']); ?>
+                                                                </h4>
+                                                                <div class="cvnewbxedit ms-auto">
+                                                                    <a href="javascript:void(0);" onclick="edit_profile_education(<?php echo $row['id']; ?>);" class="text text-dark">
+                                                                        <i class="fas fa-pencil-alt"></i>
+                                                                    </a>
 
-                                    <div class="" id="education_div">
-                                        <ul class="educationList">
-                                            <?php while ($row = mysqli_fetch_assoc($query)): ?>
-                                                <li>
-                                                    <span class="exdot"></span>
-                                                    <div class="expbox" id="education_<?php echo $row['id']; ?>">
-                                                        <div class="d-flex">
-                                                            <h4>
-                                                                <?php echo htmlspecialchars($row['degree_level_id']); ?> -
-                                                                <?php echo htmlspecialchars($row['degree_title']); ?>
-                                                            </h4>
-                                                            <div class="cvnewbxedit ms-auto">
-                                                                <a href="javascript:void(0);" onclick="edit_profile_education(<?php echo $row['id']; ?>);" class="text text-dark">
-                                                                    <i class="fas fa-pencil-alt"></i>
-                                                                </a>
-
-                                                                <a href="javascript:void(0);" onclick="delete_profile_education(<?php echo $row['id']; ?>);" class="text text-danger ms-2">
-                                                                    <i class="fas fa-times"></i>
-                                                                </a>
-
-                                                                <!-- <a href="delete_education_sql.php?id=<?php echo $row['id']; ?>"
-                                                                    onclick="return confirm('Delete this Education?');"
-                                                                    class="text text-danger ms-2">
-                                                                    <i class="fas fa-times"></i>
-                                                                </a> -->
+                                                                    <a href="javascript:void(0);" onclick="delete_profile_education(<?php echo $row['id']; ?>);" class="text text-danger ms-2">
+                                                                        <i class="fas fa-times"></i>
+                                                                    </a>
+                                                                </div>
                                                             </div>
+                                                            <div class="date"><?php echo $row['date_completion']; ?> - <?php echo $row['city_id']; ?> - <?php echo $row['country_id']; ?></div>
+                                                            <div class="expcomp"><i class="fas fa-graduation-cap"></i> <?php echo $row['degree_type_id']; ?></div>
+                                                            <div class="expcomp"><i class="fas fa-map-marker-alt"></i> <?php echo $row['city_id']; ?> - <?php echo $row['country_id']; ?></div>
+                                                            <div class="expcomp"><i class="fas fa-school"></i> <?php echo $row['institution']; ?></div>
                                                         </div>
-                                                        <div class="date"><?php echo $row['date_completion']; ?> - <?php echo $row['city_id']; ?> - <?php echo $row['country_id']; ?></div>
-                                                        <div class="expcomp"><i class="fas fa-graduation-cap"></i> <?php echo $row['degree_type_id']; ?></div>
-                                                        <div class="expcomp"><i class="fas fa-map-marker-alt"></i> <?php echo $row['city_id']; ?> - <?php echo $row['country_id']; ?></div>
-                                                        <div class="expcomp"><i class="fas fa-school"></i> <?php echo $row['institution']; ?></div>
-                                                    </div>
-
-                                                </li>
-                                            <?php endwhile; ?>
-
-                                        </ul>
+                                                    </li>
+                                                <?php endwhile; ?>
+                                            </ul>
+                                        <?php else: ?>
+                                            <div class="text-center text-muted">No Education Added Yet</div>
+                                        <?php endif; ?>
                                     </div>
-
-
                                 </div>
-
                             </div>
+
 
                             <!-- skills....... -->
                             <div class="card">
-                                <div class="card-header">
-                                    <h4 onclick="showSkills();">Skills</h4>
-                                    <button type="button" class="btn" data-toggle="modal" data-target="#skillModal"><i class="fas fa-plus"></i>
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h4>Skills</h4>
+                                    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#skillModal">
+                                        <i class="fas fa-plus"></i>
                                     </button>
-
                                 </div>
                                 <div class="card-body">
-                                    <div class="" id="skill_div">
-                                        <div class="col-mid-12">
+                                    <div id="skill_div">
+                                        <div class="col-md-12">
                                             <table class="table table-striped">
                                                 <tbody>
-                                                    <tr id="skill_53">
-                                                        <td><strong class="text">Adobe Photoshop</strong></td>
-                                                        <td><span class="text">14 Years</span></td>
-                                                        <td align="right"><a href="javascript:;" onclick="showProfileSkillEditModal(53);" class="text text-dark"><i class="fas fa-pencil-alt"></i></a> <a href="javascript:;" onclick="delete_profile_skill(53);" class="text text-danger ms-2"><i class="fas fa-times"></i></a></td>
-                                                    </tr>
-                                                    <tr id="skill_54">
-                                                        <td><strong class="text">Adobe Illustrator</strong></td>
-                                                        <td><span class="text">9 years</span></td>
-                                                        <td align="right"><a href="javascript:;" onclick="showProfileSkillEditModal(54);" class="text text-dark"><i class="fas fa-pencil-alt"></i></a> <a href="javascript:;" onclick="delete_profile_skill(54);" class="text text-danger ms-2"><i class="fas fa-times"></i></a></td>
-                                                    </tr>
-                                                    <tr id="skill_55">
-                                                        <td><strong class="text">HTML</strong></td>
-                                                        <td><span class="text">14 Years</span></td>
-                                                        <td align="right"><a href="javascript:;" onclick="showProfileSkillEditModal(55);" class="text text-dark"><i class="fas fa-pencil-alt"></i></a> <a href="javascript:;" onclick="delete_profile_skill(55);" class="text text-danger ms-2"><i class="fas fa-times"></i></a></td>
-                                                    </tr>
-                                                    <tr id="skill_56">
-                                                        <td><strong class="text">CSS</strong></td>
-                                                        <td><span class="text">13 Years</span></td>
-                                                        <td align="right"><a href="javascript:;" onclick="showProfileSkillEditModal(56);" class="text text-dark"><i class="fas fa-pencil-alt"></i></a> <a href="javascript:;" onclick="delete_profile_skill(56);" class="text text-danger ms-2"><i class="fas fa-times"></i></a></td>
-                                                    </tr>
+                                                    <?php
+
+                                                    $user_id = $_SESSION['user_id'];
+
+                                                    $sql = "SELECT * FROM job_seeker_skills WHERE user_id='$user_id' ORDER BY id DESC";
+                                                    $result = mysqli_query($conn, $sql);
+
+                                                    if (mysqli_num_rows($result) > 0) {
+                                                        while ($row = mysqli_fetch_assoc($result)) {
+                                                    ?>
+                                                            <tr id="skill_<?php echo $row['id']; ?>">
+                                                                <td><strong class="text"><?php echo htmlspecialchars($row['job_skill']); ?></strong></td>
+                                                                <td><span class="text"><?php echo htmlspecialchars($row['job_experience']); ?></span></td>
+                                                                <td align="right">
+                                                                    <a href="javascript:void(0);" onclick="showProfileSkillEditModal(<?php echo $row['id']; ?>);" class="text text-dark">
+                                                                        <i class="fas fa-pencil-alt"></i>
+                                                                    </a>
+                                                                    <a href="javascript:void(0);" onclick="delete_profile_skill(<?php echo $row['id']; ?>);" class="text text-danger ms-2">
+                                                                        <i class="fas fa-times"></i>
+                                                                    </a>
+                                                                </td>
+                                                            </tr>
+                                                    <?php
+                                                        }
+                                                    } else {
+                                                        echo '<tr><td colspan="3" class="text-center">No skills added yet.</td></tr>';
+                                                    }
+                                                    ?>
                                                 </tbody>
                                             </table>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
+
 
                             <!-- languages -->
                             <div class="card">
-                                <div class="card-header">
-                                    <h4 onclick="showLanguages();">Languages</h4>
-                                    <button type="button" class="btn" data-toggle="modal" data-target="#languageModal"><i class="fas fa-plus"></i>
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h4>Languages</h4>
+                                    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#languageModal">
+                                        <i class="fas fa-plus"></i>
                                     </button>
-
                                 </div>
+
                                 <div class="card-body">
-                                    <div class="" id="language_div">
-                                        <div class="col-mid-12">
+                                    <div id="language_div">
+                                        <div class="col-md-12">
                                             <table class="table table-striped">
                                                 <tbody>
-                                                    <tr id="language_34">
-                                                        <td><strong>Urdu</strong></td>
-                                                        <td><span>Expert</span></td>
-                                                        <td align="right"><a href="javascript:;" onclick="showProfileLanguageEditModal(34);" class="text text-dark"><i class="fas fa-pencil-alt"></i></a> <a href="javascript:;" onclick="delete_profile_language(34);" class="text text-danger ms-2"><i class="fas fa-times"></i></a></td>
-                                                    </tr>
-                                                    <tr id="language_35">
-                                                        <td><strong>English</strong></td>
-                                                        <td><span>Expert</span></td>
-                                                        <td align="right"><a href="javascript:;" onclick="showProfileLanguageEditModal(35);" class="text text-dark"><i class="fas fa-pencil-alt"></i></a> <a href="javascript:;" onclick="delete_profile_language(35);" class="text text-danger ms-2"><i class="fas fa-times"></i></a></td>
-                                                    </tr>
+                                                    <?php
+                                                    // Ensure session is started and config included once in your page
+                                                    if (session_status() === PHP_SESSION_NONE) {
+                                                        session_start();
+                                                    }
+                                                    include 'include/config.php'; // adjust path if needed
+
+                                                    $user_id = isset($_SESSION['user_id']) ? intval($_SESSION['user_id']) : 0;
+
+                                                    $sql = "SELECT * FROM job_seeker_languages WHERE user_id = '$user_id' ORDER BY id DESC";
+                                                    $result = mysqli_query($conn, $sql);
+
+                                                    if ($result && mysqli_num_rows($result) > 0) {
+                                                        while ($row = mysqli_fetch_assoc($result)) {
+                                                            $lang_id = (int)$row['id'];
+                                                            $language = htmlspecialchars($row['language']);
+                                                            $level = htmlspecialchars($row['language_level']);
+                                                    ?>
+                                                            <tr id="language_<?php echo $lang_id; ?>">
+                                                                <td><strong><?php echo $language; ?></strong></td>
+                                                                <td><span><?php echo $level; ?></span></td>
+                                                                <td align="right">
+                                                                    <a href="javascript:void(0);" onclick="showProfileLanguageEditModal(<?php echo $lang_id; ?>);" class="text text-dark">
+                                                                        <i class="fas fa-pencil-alt"></i>
+                                                                    </a>
+                                                                    <a href="javascript:void(0);" onclick="delete_profile_language(<?php echo $lang_id; ?>);" class="text text-danger ms-2">
+                                                                        <i class="fas fa-times"></i>
+                                                                    </a>
+                                                                </td>
+                                                            </tr>
+                                                    <?php
+                                                        }
+                                                    } else {
+                                                        echo '<tr><td colspan="3" class="text-center">No languages added yet.</td></tr>';
+                                                    }
+                                                    ?>
                                                 </tbody>
                                             </table>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
-
-
-
-
-                            <!-- <div class="modal" id="add_language_modal" tabindex="-1" aria-labelledby="addlangModalLabel" aria-hidden="true" role="dialog"></div> -->
-
-
 
                         </div>
                     </div>
@@ -973,13 +1001,15 @@ include 'include/config.php'; // DB connection
         aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
-                <form class="form" id="add_edit_profile_skill" method="POST" action=""><input type="hidden" name="_token" value="rtLt9mvNx5J5gDNmrhcdV1ZSVZoZegEtQK253C5E" autocomplete="off">
+                <form class="form" id="add_edit_profile_skill" method="POST" action="skills_insert_sql.php"><input type="hidden" name="_token" value="rtLt9mvNx5J5gDNmrhcdV1ZSVZoZegEtQK253C5E" autocomplete="off">
                     <div class="modal-header">
                         <h4 class="modal-title">Add Skill</h4>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <div class="form-body">
+                            <input type="hidden" id="skill_id" name="skill_id">
+
                             <div class="formrow mb-3" id="div_job_skill_id">
                                 <select class="form-control" id="job_skill" name="job_skill">
                                     <option value="" selected="selected">Select skill</option>
@@ -1021,20 +1051,26 @@ include 'include/config.php'; // DB connection
         aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
-                <form class="form" id="add_edit_profile_skill" method="POST" action=""><input type="hidden" name="_token" value="rtLt9mvNx5J5gDNmrhcdV1ZSVZoZegEtQK253C5E" autocomplete="off">
+                <form class="form" id="add_edit_profile_language" method="POST">
+
+
                     <div class="modal-header">
                         <h4 class="modal-title">Add Language</h4>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <div class="form-body">
+                            <input type="hidden" id="lang_id" name="lang_id">
+
                             <div class="formrow mb-3" id="div_language_id">
                                 <select class="form-control" id="language" name="language">
                                     <option value="" selected="selected">Select language</option>
                                     <option value="Abkhazian">Abkhazian</option>
                                     <option value="Afar">Afar</option>
-                                    <option value="Afrikaans">Afrikaans</option>
-                                    <option value="Akan">Akan</option>
+                                    <option value="English">English</option>
+                                    <option value="Urdu">Urdu</option>
+                                    <option value="Punjabi">Punjabi</option>
+                                    <option value="Saraiki">Saraiki</option>
                                     <option value="Albanian">Albanian</option>
 
                                 </select> <span class="help-block language_id-error"></span>
@@ -1050,7 +1086,11 @@ include 'include/config.php'; // DB connection
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary w-100 fs-6 fw-bold" onclick="submitProfileSkillForm();">Save Changes <i class="fa fa-arrow-circle-right" aria-hidden="true"></i></button>
+                        <button type="button" class="btn btn-primary w-100 fs-6 fw-bold" onclick="submitProfileLanguageForm();">
+                            Save Changes <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+                        </button>
+
+
                     </div>
                 </form>
             </div>
@@ -1237,11 +1277,6 @@ include 'include/config.php'; // DB connection
                 $('#experienceList').html(html);
             });
         }
-
-
-
-
-
         // Edit experience
         function editExperience(expId) {
             console.log("Experience ID:", expId);
@@ -1289,8 +1324,6 @@ include 'include/config.php'; // DB connection
             });
 
         }
-
-
         // Delete experience
         function delete_profile_experience(id) {
             if (confirm("Are you sure you want to delete this experience?")) {
@@ -1307,8 +1340,6 @@ include 'include/config.php'; // DB connection
                 });
             }
         }
-
-
         // Submit Experience Form (Add/Edit)
         $('#experienceForm').on('submit', function(e) {
             e.preventDefault();
@@ -1369,7 +1400,7 @@ include 'include/config.php'; // DB connection
             fetchExperiences();
         });
     </script>
-    <!-- Script for education -->
+    <!-- AJAX for education -->
     <script>
         document.getElementById("add_edit_profile_education").addEventListener("submit", function(e) {
             // Degree Level
@@ -1399,51 +1430,71 @@ include 'include/config.php'; // DB connection
         // Delete education
         function delete_profile_education(id) {
             if (confirm("Are you sure you want to delete this education?")) {
-                $.post("delete_education_sql.php", {
-                    id: id
-                }, function(response) {
-                    let res = JSON.parse(response);
-                    if (res.success) {
-                        alert(res.message);
-                        location.reload();
-                    } else {
-                        alert("Delete failed: " + res.message);
+                $.ajax({
+                    url: "delete_education_sql.php",
+                    type: "POST",
+                    data: {
+                        id: id
+                    },
+                    dataType: "json",
+                    success: function(response) {
+                        if (response.success) {
+                            alert(response.message); // ✅ show alert
+                            location.reload(); // ✅ reload
+                        } else {
+                            alert("Delete failed: " + response.message);
+                        }
+                    },
+                    error: function() {
+                        alert("An error occurred while deleting education.");
                     }
                 });
             }
         }
+
         // Edit education
         function edit_profile_education(id) {
-            $.post("fetch_education_sql.php", {
-                id: id
-            }, function(response) {
-                let res = JSON.parse(response);
-                if (res.success) {
-                    // Set hidden id
-                    $("#edu_id").val(res.data.id);
+            $.ajax({
+                url: "fetch_education_sql.php", // ✅ same folder me rakho
+                type: "POST",
+                data: {
+                    id: id
+                },
+                success: function(response) {
+                    let data = JSON.parse(response);
 
-                    // Fill fields
-                    $("#degree_level_id").val(res.data.degree_level_id);
-                    $("#degree_type_id").val(res.data.degree_type_id);
-                    $("#degree_title").val(res.data.degree_title);
-                    $("#education_country_id").val(res.data.country_id);
-                    $("#education_state_id").val(res.data.state_id);
-                    $("#city_id").val(res.data.city_id);
-                    $("#institution").val(res.data.institution);
-                    $("#date_completion").val(res.data.date_completion);
-                    $("#degree_result").val(res.data.degree_result);
-                    $("#result_type_id").val(res.data.result_type_id);
+                    if (data.success) {
+                        // form fill
+                        $("#edu_id").val(data.education.id);
+                        $("#degree_level_id").val(data.education.degree_level_id);
+                        $("#degree_type_id").val(data.education.degree_type_id);
+                        $("#degree_title").val(data.education.degree_title);
+                        $("#institution").val(data.education.institution);
+                        $("#education_country_id").val(data.education.country_id);
+                        $("#education_state_id").val(data.education.state_id);
+                        // City select fix
+                        $("#city_id option").each(function() {
+                            if ($.trim($(this).val().toLowerCase()) === $.trim(data.education.city_id.toLowerCase())) {
+                                $(this).prop("selected", true);
+                            }
+                        });
 
-                    // Change modal title
-                    $(".modal-title").text("Edit Education");
+                        $("#date_completion").val(data.education.date_completion);
+                        $("#degree_result").val(data.education.degree_result);
+                        $("#result_type_id").val(data.education.result_type_id);
 
-                    // Show modal
-                    $("#educationModal").modal("show");
-                } else {
-                    alert("Failed: " + res.message);
+                        $(".modal-title").text("Edit Education");
+                        $("#educationModal").modal("show"); // ✅ modal open hoga
+                    } else {
+                        alert("Record not found");
+                    }
+                },
+                error: function() {
+                    alert("Error fetching data.");
                 }
             });
         }
+
 
         function add_new_education() {
             $("#add_edit_profile_education")[0].reset();
@@ -1452,7 +1503,139 @@ include 'include/config.php'; // DB connection
             $("#educationModal").modal("show");
         }
     </script>
+    <!-- AJAX for skill -->
+    <script>
+        function submitProfileSkillForm() {
+            $.ajax({
+                url: "skills_insert_sql.php",
+                type: "POST",
+                data: $("#add_edit_profile_skill").serialize(),
+                success: function(response) {
+                    if (response.success) {
+                        alert(response.message); // ✅ Show alert
+                        location.reload(); // ✅ Auto reload page
+                    } else {
+                        alert("Error: " + response.message);
+                    }
+                }
+            });
+        }
 
+
+        function showSkills() {
+            $.ajax({
+                url: "skills_fetch_sql.php",
+                type: "GET",
+                success: function(response) {
+                    $("#skill_div table tbody").html(response);
+                }
+            });
+        }
+
+        function delete_profile_skill(id) {
+            if (confirm("Are you sure you want to delete this skill?")) {
+                $.post("skill_delete_sql.php", {
+                    id: id
+                }, function(response) {
+                    let res = JSON.parse(response);
+                    if (res.success) {
+                        alert(res.message);
+                        location.reload(); // refresh to update table
+                    } else {
+                        alert("Delete failed: " + res.message);
+                    }
+                });
+            }
+        }
+
+        function showProfileSkillEditModal(id) {
+            $.post("skill_fetch_sql.php", {
+                id: id
+            }, function(response) {
+                let res = JSON.parse(response);
+                if (res.success) {
+                    // fill modal with skill data
+                    $("#skill_id").val(res.data.id);
+                    $("#job_skill").val(res.data.job_skill);
+                    $("#job_experience").val(res.data.job_experience);
+
+                    $(".modal-title").text("Edit Skill");
+                    $("#skillModal").modal("show");
+                } else {
+                    alert("Failed to fetch skill details!");
+                }
+            });
+        }
+    </script>
+    <!-- AJAX for language -->
+    <script>
+        function submitProfileLanguageForm() {
+            $.ajax({
+                url: "language_insert_sql.php",
+                type: "POST",
+                data: $("#add_edit_profile_language").serialize(),
+                success: function(response) {
+                    if (response.success) {
+                        alert(response.message);
+                        location.reload(); // 🔄 auto refresh after success
+                    } else {
+                        alert("Error: " + response.message);
+                    }
+                }
+            });
+        }
+
+
+        // 🟢 Edit (Open Modal + Fetch Existing Data)
+        function showProfileLanguageEditModal(id) {
+            $.ajax({
+                url: "language_fetch_sql.php", // ye file DB se record fetch karegi
+                type: "POST",
+                data: {
+                    id: id
+                },
+                success: function(response) {
+                    let data = JSON.parse(response);
+                    if (data.success) {
+                        // Fill modal fields
+                        $("#lang_id").val(data.language.id);
+                        $("#language").val(data.language.language);
+                        $("#language_level").val(data.language.language_level);
+
+                        // Change modal title
+                        $(".modal-title").text("Edit Language");
+
+                        // Show modal
+                        $("#languageModal").modal("show");
+                    } else {
+                        alert("Error: " + data.message);
+                    }
+                }
+            });
+        }
+
+
+        // 🟢 Delete Language
+        function delete_profile_language(lang_id) {
+            if (confirm("Are you sure you want to delete this language?")) {
+                $.ajax({
+                    url: "language_delete_sql.php",
+                    type: "POST",
+                    data: {
+                        language_id: lang_id
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            alert(response.message); // ✅ show alert
+                            location.reload(); // ✅ auto reload
+                        } else {
+                            alert("Error: " + response.message);
+                        }
+                    }
+                });
+            }
+        }
+    </script>
 
 </body>
 

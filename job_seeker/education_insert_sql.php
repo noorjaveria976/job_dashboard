@@ -41,10 +41,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (mysqli_query($conn, $sql)) {
-        header("Location: profile.php?success=$msg");
+        header("Location: build_resume.php?success=$msg");
         exit;
     } else {
-        header("Location: profile.php?error=" . mysqli_error($conn));
+        header("Location: build_resume.php?error=" . mysqli_error($conn));
         exit;
     }
 }

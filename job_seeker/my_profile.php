@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 
-
-<!-- blank.html  21 Nov 2019 03:54:41 GMT -->
-
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
@@ -40,14 +37,15 @@
                                     }
                                 </script>
                                 <!-- Personal Information -->
-                                <form method="POST" action="https://www.sharjeelanjum.com/demos/jobsportal-update/my-profile" accept-charset="UTF-8" class="form" enctype="multipart/form-data"><input name="_method" type="hidden" value="PUT"><input name="_token" type="hidden" value="ovNCKmdkgdoAGvpuVN7NG5DYU9pbuu6l8dmToR31">
+                                <form method="POST" action="" accept-charset="UTF-8" class="form" enctype="multipart/form-data">
+
 
                                     <h5>Account Information</h5>
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="formrow ">
                                                 <label for="">Email</label>
-                                                <input class="form-control" id="email" placeholder="Email" name="email" type="text" value="seeker@jobsportal.com">
+                                                <input class="form-control" id="email" placeholder="Email" name="email" type="text" value="">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -154,7 +152,7 @@
                                                     <option value="">Select Country</option>
                                                     <option value="1">Afghanistan</option>
                                                     <option value="2">Albania</option>
-                                                   
+
                                                 </select>
                                             </div>
                                         </div>
@@ -168,7 +166,7 @@
                                                         <option value="3919">Alabama</option>
                                                         <option value="3920">Alaska</option>
                                                         <option value="3921">Arizona</option>
-                                                        
+
                                                     </select></span>
                                             </div>
                                         </div>
@@ -182,7 +180,7 @@
                                                         <option value="46766">Aberdeen</option>
                                                         <option value="46767">Airway Heights</option>
                                                         <option value="46768">Alderwood Manor</option>
-                                                        
+
                                                     </select></span>
                                             </div>
                                         </div>
@@ -197,7 +195,7 @@
                                                     <option value="231" selected="selected">Americans</option>
                                                     <option value="1">Afghans</option>
                                                     <option value="2">Albanians</option>
-                                                   
+
                                                 </select>
                                             </div>
                                         </div>
@@ -258,7 +256,7 @@
                                                     <option value="12">Less Than 1 Year</option>
                                                     <option value="1">1 Year</option>
                                                     <option value="3">2 years</option>
-                                                   
+
                                                 </select>
                                             </div>
                                         </div>
@@ -286,7 +284,7 @@
                                                     <option value="8">Accounting/Taxation</option>
                                                     <option value="7" selected="selected">Advertising/PR</option>
                                                     <option value="13">Agriculture/Fertilizer/Pesticide</option>
-                                                   
+
                                                 </select>
                                             </div>
                                         </div>
@@ -301,7 +299,7 @@
                                                     <option value="654"></option>
                                                     <option value="633" selected="selected">Information Technology</option>
                                                     <option value="634">Management and Manufacturing</option>
-                                                    
+
                                                 </select>
                                             </div>
                                         </div>
@@ -335,8 +333,17 @@
                                         </div>
 
                                     </div>
-
-
+                                    <!-- textarea -->
+                                    <div class="row">
+                                        <h5>Summary</h5>
+                                        <div class="col-md-12">
+                                            <div class="form-group mb-3">
+                                                <textarea name="summary" class="form-control" id="summary" placeholder="Profile Summary" rows="5"
+        style="resize: vertical; min-height:100px; max-height:500px;"></textarea>
+                                                <span class="help-block summary-error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
 
                                     <div class="row">
 
@@ -353,9 +360,30 @@
                                     </div>
 
 
+
                                 </form>
 
+                                <!-- <div class="userccount">
+                                    <div class="formpanel">
+                                        <h5>Summary</h5>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <form class="form" id="add_edit_profile_summary" method="POST" action="">
 
+                                                    <div class="form-body">
+                                                        <div id="success_msg"></div>
+                                                        <div class="form-group mb-3">
+                                                            <textarea name="summary" class="form-control" id="summary" placeholder="Profile Summary">Hello! I'm Javeria, A Passionate UI/UX Designer and Frontend Developer with a strong technical background. I bring innovation and attention to detail to create visually stunning, user-centric designs. Proactive and disciplined, I excel in ensuring maximum accessibility and elevating customer experiences throughout the development process. Let's redefine digital interactions alone.</textarea>
+                                                            <span class="help-block summary-error"></span>
+                                                        </div>
+                                                        <button type="button" class="btn btn-large btn-primary" onclick="submitProfileSummaryForm();">Update Summary <i class="fa fa-arrow-circle-right" aria-hidden="true"></i></button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div> -->
 
                             </div>
                         </div>
@@ -464,8 +492,23 @@
     <!-- Page Specific JS File -->
     <!-- Template JS File -->
     <script src="assets/js/scripts.js"></script>
+    <script src="assets/js/bootstrap3-typeahead.min.js" type="text/javascript"></script>
+
     <!-- Custom JS File -->
     <script src="assets/js/custom.js"></script>
+   
+
+
+
+
+
+
+
+
+
+    Ask ChatGPT
+
+
 </body>
 
 

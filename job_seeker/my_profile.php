@@ -1,3 +1,7 @@
+<?php
+session_start();
+include 'include/config.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -37,7 +41,7 @@
                                     }
                                 </script>
                                 <!-- Personal Information -->
-                                <form method="POST" action="" accept-charset="UTF-8" class="form" enctype="multipart/form-data">
+                                <form method="POST" action="save_profile_sql.php" accept-charset="UTF-8" class="form" enctype="multipart/form-data">
 
 
                                     <h5>Account Information</h5>
@@ -45,13 +49,13 @@
                                         <div class="col-md-6">
                                             <div class="formrow ">
                                                 <label for="">Email</label>
-                                                <input class="form-control" id="email" placeholder="Email" name="email" type="text" value="">
+                                                <input class="form-control" id="email" placeholder="Email" name="email" type="text">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="formrow ">
                                                 <label for="">Password</label>
-                                                <input class="form-control" id="password" placeholder="Password" name="password" type="password" value="">
+                                                <input class="form-control" id="password" placeholder="Password" name="password" type="password">
                                             </div>
                                         </div>
                                     </div>
@@ -61,11 +65,18 @@
                                     <h5>Personal Information</h5>
 
                                     <div class="row p-2 g-1">
-                                        <div class="col-md-6 pe-3">
+                                        <div class="col-md-6 pe-3"><?php
+                                                                    // Profile fetch karo
+                                                                    $user_id = $_SESSION['user_id'] ?? 0;
+                                                                    $profile = mysqli_query($conn, "SELECT * FROM job_seeker_profiles WHERE user_id='$user_id'");
+                                                                    $data = mysqli_fetch_assoc($profile);
+                                                                    ?>
                                             <div class="userimgupbox bg-white p-5">
                                                 <div class="imagearea text-center" style="min-height: 122px;">
                                                     <label class="d-block mb-1 fw-semibold text-dark">Profile Image <span>*</span></label>
-                                                    <img src="https://www.sharjeelanjum.com/demos/jobsportal-update/user_images/-1741437874-596.jpg" style="max-width:100px; max-height:100px;" alt="" title="">
+                                                    <!-- Profile Image -->
+                                                    <img src="uploads/profile/<?php echo $data['profile_image'] ?? 'default.png'; ?>"
+                                                        style="max-width:100px; max-height:100px;" alt="Profile">
                                                 </div>
                                                 <div class="formrow">
                                                     <div id="thumbnail"></div>
@@ -82,7 +93,9 @@
                                             <div class="userimgupbox bg-white p-5">
                                                 <div class="imagearea text-center" style="min-height: 122px;">
                                                     <label class="d-block mb-1 fw-semibold text-dark">Cover Photo</label>
-                                                    <img src="https://www.sharjeelanjum.com/demos/jobsportal-update/user_images/-1736424828-319.jpg" style="max-width:200px; max-height:90px;" alt="" title="">
+                                                    <!-- Cover Image -->
+                                                    <img src="uploads/cover/<?php echo $data['cover_image'] ?? 'default_cover.png'; ?>"
+                                                        style="max-width:200px; max-height:90px;" alt="Cover">
                                                 </div>
                                                 <div class="formrow">
                                                     <div id="thumbnail_cover_image"></div>
@@ -96,21 +109,18 @@
 
                                     </div>
 
-
-
-
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="formrow mb-3">
                                                 <label class="mb-0" for="">First Name <span>*</span></label>
-                                                <input class="form-control" id="first_name" placeholder="First Name" name="first_name" type="text" value="Job">
+                                                <input class="form-control" id="first_name" placeholder="First Name" name="first_name" type="text">
                                             </div>
                                         </div>
 
                                         <div class="col-md-6">
                                             <div class="formrow mb-3">
                                                 <label class="mb-0" for="">Last Name <span>*</span></label>
-                                                <input class="form-control" id="last_name" placeholder="Last Name" name="last_name" type="text" value="Seeker">
+                                                <input class="form-control" id="last_name" placeholder="Last Name" name="last_name" type="text">
                                             </div>
                                         </div>
                                         <div class="col-md-4">
@@ -123,24 +133,24 @@
                                         <div class="col-md-4">
                                             <div class="formrow mb-3">
                                                 <label class="mb-0" for="">Gender <span>*</span></label>
-                                                <select class="form-control" id="gender_id" name="gender_id">
+                                                <select class="form-control" id="gender" name="gender">
                                                     <option value="">Select Gender</option>
-                                                    <option value="1">Female</option>
-                                                    <option value="2" selected="selected">Male</option>
-                                                    <option value="15"></option>
+                                                    <option value="Female">Female</option>
+                                                    <option value="Male" selected="selected">Male</option>
+
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="formrow mb-3">
                                                 <label class="mb-0" for="">Martial Status <span>*</span></label>
-                                                <select class="form-control" id="marital_status_id" name="marital_status_id">
+                                                <select class="form-control" id="marital_status" name="marital_status">
                                                     <option value="">Select Marital Status</option>
-                                                    <option value="1">Divorced</option>
-                                                    <option value="2">Married</option>
-                                                    <option value="3">Separated</option>
-                                                    <option value="4" selected="selected">Single</option>
-                                                    <option value="5">Widow/er</option>
+                                                    <option value="Divorced">Divorced</option>
+                                                    <option value="Married">Married</option>
+                                                    <option value="Separated">Separated</option>
+                                                    <option value="Single" selected="selected">Single</option>
+                                                    <option value="Widow/er">Widow/er</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -148,10 +158,10 @@
                                         <div class="col-md-6">
                                             <div class="formrow mb-3">
                                                 <label class="mb-0" for="">Country <span>*</span></label>
-                                                <select class="form-control" id="country_id" name="country_id">
+                                                <select class="form-control" id="country" name="country">
                                                     <option value="">Select Country</option>
-                                                    <option value="1">Afghanistan</option>
-                                                    <option value="2">Albania</option>
+                                                    <option value="Afghanistan">Afghanistan</option>
+                                                    <option value="Albania">Albania</option>
 
                                                 </select>
                                             </div>
@@ -161,11 +171,11 @@
                                         <div class="col-md-3">
                                             <div class="formrow mb-3">
                                                 <label class="mb-0" for="">State <span>*</span></label>
-                                                <span id="state_dd"><select id="state_id" class="form-control" name="state_id">
+                                                <span id="state_dd"><select id="state" class="form-control" name="state">
                                                         <option value="">Select State</option>
-                                                        <option value="3919">Alabama</option>
-                                                        <option value="3920">Alaska</option>
-                                                        <option value="3921">Arizona</option>
+                                                        <option value="Alabama">Alabama</option>
+                                                        <option value="Alaska">Alaska</option>
+                                                        <option value="Arizona">Arizona</option>
 
                                                     </select></span>
                                             </div>
@@ -175,11 +185,11 @@
                                         <div class="col-md-3">
                                             <div class="formrow mb-3">
                                                 <label class="mb-0" for="">City <span>*</span></label>
-                                                <span id="city_dd"><select id="city_id" class="form-control" name="city_id">
+                                                <span id="city_dd"><select id="city" class="form-control" name="city">
                                                         <option value="">Select City</option>
-                                                        <option value="46766">Aberdeen</option>
-                                                        <option value="46767">Airway Heights</option>
-                                                        <option value="46768">Alderwood Manor</option>
+                                                        <option value="Aberdeen">Aberdeen</option>
+                                                        <option value="Airway Heights">Airway Heights</option>
+                                                        <option value="Alderwood Manor">Alderwood Manor</option>
 
                                                     </select></span>
                                             </div>
@@ -189,12 +199,12 @@
                                         <div class="col-md-6">
                                             <div class="formrow mb-3">
                                                 <label class="mb-0" for="">Nationality <span>*</span></label>
-                                                <select class="form-control" id="nationality_id" name="nationality_id">
+                                                <select class="form-control" id="nationality" name="nationality">
                                                     <option value="">Select Nationality</option>
-                                                    <option value="230">British</option>
-                                                    <option value="231" selected="selected">Americans</option>
-                                                    <option value="1">Afghans</option>
-                                                    <option value="2">Albanians</option>
+                                                    <option value="British">British</option>
+                                                    <option value="Americans" selected="selected">Americans</option>
+                                                    <option value="Afghans">Afghans</option>
+                                                    <option value="Albanians">Albanians</option>
 
                                                 </select>
                                             </div>
@@ -212,13 +222,13 @@
                                         <div class="col-md-6">
                                             <div class="formrow mb-3">
                                                 <label class="mb-0" for="">Phone <span>*</span></label>
-                                                <input class="form-control" id="phone" placeholder="Phone" name="phone" type="text" value="+1234567890">
+                                                <input class="form-control" id="phone" placeholder="Phone" name="phone" type="text">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="formrow mb-3">
                                                 <label class="mb-0" for="">Mobile</label>
-                                                <input class="form-control" id="mobile_num" placeholder="Mobile Number" name="mobile_num" type="text" value="+1324564798">
+                                                <input class="form-control" id="mobile_num" placeholder="Mobile Number" name="mobile_num" type="text">
                                             </div>
                                         </div>
                                         <div class="col-md-12">
@@ -231,7 +241,7 @@
                                     </div>
 
                                     <hr>
-                                    <h5>Add Video Profile</h5>
+                                    <!-- <h5>Add Video Profile</h5>
 
                                     <div class="row">
                                         <div class="col-md-12" id="video_link_id">
@@ -241,7 +251,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <hr>
+                                    <hr> -->
 
                                     <h5>Career Information</h5>
 
@@ -250,12 +260,12 @@
                                         <div class="col-md-6">
                                             <div class="formrow mb-3">
                                                 <label class="mb-0" for="">Job Experience <span>*</span></label>
-                                                <select class="form-control" id="job_experience_id" name="job_experience_id">
+                                                <select class="form-control" id="job_experience" name="job_experience">
                                                     <option value="">Select Experience</option>
-                                                    <option value="11">Fresh</option>
-                                                    <option value="12">Less Than 1 Year</option>
-                                                    <option value="1">1 Year</option>
-                                                    <option value="3">2 years</option>
+                                                    <option value="Fresh">Fresh</option>
+                                                    <option value="Less Than 1 Year">Less Than 1 Year</option>
+                                                    <option value="1 Year">1 Year</option>
+                                                    <option value="2 years">2 years</option>
 
                                                 </select>
                                             </div>
@@ -264,14 +274,14 @@
                                         <div class="col-md-6">
                                             <div class="formrow mb-3">
                                                 <label class="mb-0" for="">Career Level <span>*</span></label>
-                                                <select class="form-control" id="career_level_id" name="career_level_id">
+                                                <select class="form-control" id="career_level" name="career_level">
                                                     <option value="">Select Career Level</option>
-                                                    <option value="1">Department Head</option>
-                                                    <option value="2">Entry Level</option>
-                                                    <option value="3" selected="selected">Experienced Professional</option>
-                                                    <option value="4">GM / CEO / Country Head / President</option>
-                                                    <option value="5">Intern/Student</option>
-                                                    <option value="23"></option>
+                                                    <option value="Department Head">Department Head</option>
+                                                    <option value="Entry Level">Entry Level</option>
+                                                    <option value="Experienced Professional">Experienced Professional</option>
+                                                    <option value="GM / CEO / Country Head / President">GM / CEO / Country Head / President</option>
+                                                    <option value="Intern/Student">Intern/Student</option>
+
                                                 </select>
                                             </div>
                                         </div>
@@ -279,11 +289,11 @@
                                         <div class="col-md-6">
                                             <div class="formrow mb-3">
                                                 <label class="mb-0" for="">Select Industry <span>*</span></label>
-                                                <select class="form-control" id="industry_id" name="industry_id">
+                                                <select class="form-control" id="industry" name="industry">
                                                     <option value="">Select Industry</option>
-                                                    <option value="8">Accounting/Taxation</option>
-                                                    <option value="7" selected="selected">Advertising/PR</option>
-                                                    <option value="13">Agriculture/Fertilizer/Pesticide</option>
+                                                    <option value="Accounting/Taxation">Accounting/Taxation</option>
+                                                    <option value="Advertising/PR">Advertising/PR</option>
+                                                    <option value="Agriculture/Fertilizer/Pesticide">Agriculture/Fertilizer/Pesticide</option>
 
                                                 </select>
                                             </div>
@@ -293,12 +303,12 @@
                                         <div class="col-md-6">
                                             <div class="formrow mb-3">
                                                 <label class="mb-0" for="">Functional Area <span>*</span></label>
-                                                <select class="form-control" id="functional_area_id" name="functional_area_id">
+                                                <select class="form-control" id="functional_area" name="functional_area">
                                                     <option value="">Select Functional Area</option>
-                                                    <option value="640">Other</option>
-                                                    <option value="654"></option>
-                                                    <option value="633" selected="selected">Information Technology</option>
-                                                    <option value="634">Management and Manufacturing</option>
+                                                    <option value="Other">Other</option>
+
+                                                    <option value="Information Technology">Information Technology</option>
+                                                    <option value="Management and Manufacturing">Management and Manufacturing</option>
 
                                                 </select>
                                             </div>
@@ -307,7 +317,7 @@
                                         <div class="col-md-4">
                                             <div class="formrow mb-3">
                                                 <label class="mb-0" for="">Salary Currency</label>
-                                                <input class="form-control" id="salary_currency" placeholder="Salary Currency" autocomplete="off" disabled="disabled" name="salary_currency" type="text" value="USD">
+                                                <input class="form-control" id="salary_currency" placeholder="Salary Currency" autocomplete="off" name="salary_currency" type="text" value="USD">
 
                                             </div>
                                         </div>
@@ -316,7 +326,7 @@
                                                 <label class="mb-0" for="">Current Salary <span>*</span></label>
                                                 <div class="input-group">
 
-                                                    <input class="form-control" id="current_salary" placeholder="Current Salary" name="current_salary" type="text" value="6000">
+                                                    <input class="form-control" id="current_salary" placeholder="Current Salary" name="current_salary" type="text">
                                                 </div>
                                             </div>
                                         </div>
@@ -326,7 +336,7 @@
 
                                                 <div class="input-group">
 
-                                                    <input class="form-control" id="expected_salary" placeholder="Expected Salary" name="expected_salary" type="text" value="10000">
+                                                    <input class="form-control" id="expected_salary" placeholder="Expected Salary" name="expected_salary" type="text">
                                                 </div>
 
                                             </div>
@@ -339,7 +349,7 @@
                                         <div class="col-md-12">
                                             <div class="form-group mb-3">
                                                 <textarea name="summary" class="form-control" id="summary" placeholder="Profile Summary" rows="5"
-        style="resize: vertical; min-height:100px; max-height:500px;"></textarea>
+                                                    style="resize: vertical; min-height:100px; max-height:500px;"></textarea>
                                                 <span class="help-block summary-error"></span>
                                             </div>
                                         </div>
@@ -349,7 +359,7 @@
 
                                         <div class="col-md-12">
                                             <div class="formrow mb-3">
-                                                <input type="checkbox" value="1" name="is_subscribed" checked="&quot;checked&quot;">
+                                                <input type="checkbox" name="is_subscribed">
                                                 Subscribe to Newsletter
 
                                             </div>
@@ -363,27 +373,7 @@
 
                                 </form>
 
-                                <!-- <div class="userccount">
-                                    <div class="formpanel">
-                                        <h5>Summary</h5>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <form class="form" id="add_edit_profile_summary" method="POST" action="">
 
-                                                    <div class="form-body">
-                                                        <div id="success_msg"></div>
-                                                        <div class="form-group mb-3">
-                                                            <textarea name="summary" class="form-control" id="summary" placeholder="Profile Summary">Hello! I'm Javeria, A Passionate UI/UX Designer and Frontend Developer with a strong technical background. I bring innovation and attention to detail to create visually stunning, user-centric designs. Proactive and disciplined, I excel in ensuring maximum accessibility and elevating customer experiences throughout the development process. Let's redefine digital interactions alone.</textarea>
-                                                            <span class="help-block summary-error"></span>
-                                                        </div>
-                                                        <button type="button" class="btn btn-large btn-primary" onclick="submitProfileSummaryForm();">Update Summary <i class="fa fa-arrow-circle-right" aria-hidden="true"></i></button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div> -->
 
                             </div>
                         </div>
@@ -496,23 +486,31 @@
 
     <!-- Custom JS File -->
     <script src="assets/js/custom.js"></script>
-   
 
+    <script>
+        $("#profile_form").on("submit", function(e) {
+            e.preventDefault();
+            var formData = new FormData(this);
 
-
-
-
-
-
-
-
-    Ask ChatGPT
-
+            $.ajax({
+                url: "save_profile_sql.php",
+                type: "POST",
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(res) {
+                    let response = JSON.parse(res);
+                    alert(response.message);
+                    location.reload();
+                }
+            });
+        });
+    </script>
 
 </body>
 
 
-<!-- blank.html  21 Nov 2019 03:54:41 GMT -->
+
 
 </html>
 

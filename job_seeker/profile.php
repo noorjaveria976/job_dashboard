@@ -1,3 +1,11 @@
+<?php
+session_start();
+include 'include/config.php';
+$user_id = $_SESSION['user_id'] ?? 0;
+if ($user_id == 0) {
+  die("User not logged in.");
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -79,35 +87,67 @@
                               <td width="300" bgcolor="#1e5395" style="font-family:Arial, Helvetica, sans-serif; color: #fff;">
                                 <table width="270" align="center" style="margin:0 auto;">
                                   <tbody>
+                                    <?php
+
+
+                                    // fetch profile data
+                                    $sql = "SELECT * FROM job_seeker_profiles WHERE user_id='$user_id' LIMIT 1";
+                                    $result = mysqli_query($conn, $sql);
+                                    $profile = mysqli_fetch_assoc($result);
+
+                                    // agar data nahi mila
+                                    if (!$profile) {
+                                      echo "<p style='color:red; text-align:center;'>No profile data found.</p>";
+                                      exit;
+                                    }
+
+                                    // dob se age nikalna
+                                    $dob = $profile['date_of_birth'];
+                                    $age = '';
+                                    if (!empty($dob)) {
+                                      $age = date_diff(date_create($dob), date_create('today'))->y . " Years";
+                                    }
+
+                                    // image paths
+                                    $profileImg = !empty($profile['profile_image']) ? "uploads/profile/" . $profile['profile_image'] : "uploads/profile/default.png";
+                                    ?>
+                                    <!-- CV Template -->
                                     <tr>
                                       <td width="270">
                                         <div class="usercvimg">
-                                          <!-- <img src="./assets/img/users/user-11.jpg" alt="Job Seeker" title="Job Seeker"> -->
+                                          <img src="<?php echo $profileImg; ?>" alt="Job Seeker" title="Job Seeker" style="max-width:200px;">
                                         </div>
                                       </td>
                                     </tr>
+
                                     <tr>
                                       <td>
-                                        <h2 style="color: #fff;margin-bottom: 5px;font-size:20px; padding:10px 0; border-bottom: 1px solid rgba(255,255,255,0.3);">Contact Details</h2>
+                                        <h2 style="color:#fff;margin-bottom:5px;font-size:20px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.3);">Contact Details</h2>
 
+                                        <div style="color:#fff;font-size:16px;margin-top:0;display:inline-block;padding:10px;text-align:center;border-radius:40px;font-weight:700;">
+                                          <i class="fa fa-phone"></i> <?php echo $profile['phone']; ?>
+                                        </div>
 
-                                        <div style="color: #fff; font-size: 16px; margin-top: 0; display: inline-block; color: #fff; padding: 10px; text-align: center; border-radius: 40px; font-weight: 700;"><i class="fa fa-phone" aria-hidden="true"></i> +1234567890</div>
+                                        <div style="color:#fff;font-size:16px;margin-top:0;display:inline-block;padding:10px;text-align:center;border-radius:40px;font-weight:700;">
+                                          <i class="fas fa-mobile-alt"></i> <?php echo $profile['mobile_num']; ?>
+                                        </div>
 
-                                        <div style="color: #fff; font-size: 16px; margin-top: 0; display: inline-block; color: #fff; padding: 10px; text-align: center; border-radius: 40px; font-weight: 700;"><i class="fas fa-mobile-alt"></i> +1324564798</div>
+                                        <div style="color:#fff;font-size:16px;margin-top:10px;padding-left:10px;">
+                                          <i class="fas fa-envelope"></i> <?php echo $profile['email']; ?>
+                                        </div>
 
+                                        <p style="color:#fff;font-size:14px;margin-top:10px;padding-left:10px;">
+                                          <i class="fas fa-globe"></i> <?php echo $profile['city'] . ", " . $profile['state'] . ", " . $profile['country']; ?>
+                                        </p>
 
-                                        <div style="color: #fff; font-size: 16px; margin-top: 10px; padding-left: 10px;"><i class="fas fa-envelope" aria-hidden="true"></i> seeker@jobsportal.com</div>
+                                        <p style="color:#fff;font-size:14px;margin-top:10px;padding-left:10px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,0.3);">
+                                          <i class="fas fa-map-marker-alt"></i> <?php echo $profile['street_address']; ?>
+                                        </p>
 
-
-
-                                        <p style="color: #fff; font-size: 14px; margin-top: 10px; padding-left: 10px;"><i class="fas fa-globe"></i> Bainbridge Island, Washington, United States of America</p>
-
-                                        <p style="color: #fff; font-size: 14px; margin-top: 10px; padding-left: 10px; padding-bottom:20px; border-bottom: 1px solid rgba(255,255,255,0.3);"><i class="fas fa-map-marker-alt"></i> Dummy Street Address 123 USA</p>
-
-
-                                        <div style="color: #fff; font-size: 30px; text-align: center; text-transform: uppercase; border: 1px solid #fff; padding: 10px; font-weight: bold; margin-top: 20px;">6 years</div>
-                                        <p style="color: #fff; font-size: 16px; text-align: center; margin-top: 5px; letter-spacing: 3px; margin-bottom: 0; text-transform: uppercase;">Of experience</p>
-
+                                        <div style="color:#fff;font-size:30px;text-align:center;text-transform:uppercase;border:1px solid #fff;padding:10px;font-weight:bold;margin-top:20px;">
+                                          <?php echo $profile['job_experience']; ?>
+                                        </div>
+                                        <p style="color:#fff;font-size:16px;text-align:center;margin-top:5px;letter-spacing:3px;margin-bottom:0;text-transform:uppercase;">Of experience</p>
                                       </td>
                                     </tr>
 
@@ -117,65 +157,60 @@
 
                                     <tr>
                                       <td>
-                                        <h2 style="color: #fff;margin-bottom: 5px;font-size:20px; padding:10px 0; border-bottom: 1px solid rgba(255,255,255,0.3);">Personal Details</h2>
+                                        <h2 style="color:#fff;margin-bottom:5px;font-size:20px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.3);">Personal Details</h2>
                                       </td>
                                     </tr>
 
                                     <tr>
                                       <td>
-                                        salary_currency
-                                        <table width="270" align="center" style="font-size: 14px;">
+                                        <table width="270" align="center" style="font-size:14px;">
                                           <tbody>
                                             <tr>
-                                              <td width="120" style="padding: 10px 0;"><strong>D.O.B</strong></td>
-                                              <td style="padding: 10px 0;">9th of June 1989
-                                              </td>
+                                              <td width="120" style="padding:10px 0;"><strong>D.O.B</strong></td>
+                                              <td style="padding:10px 0;"><?php echo $profile['date_of_birth']; ?></td>
                                             </tr>
                                             <tr>
-                                              <td width="120" style="padding: 10px 0;"><strong>Age</strong></td>
-                                              <td style="padding: 10px 0;">36 Years</td>
+                                              <td><strong>Age</strong></td>
+                                              <td><?php echo $age; ?></td>
                                             </tr>
                                             <tr>
-                                              <td style="padding: 10px 0;"><strong>Gender</strong></td>
-                                              <td style="padding: 10px 0;">Male</td>
+                                              <td><strong>Gender</strong></td>
+                                              <td><?php echo $profile['gender']; ?></td>
                                             </tr>
                                             <tr>
-                                              <td style="padding: 10px 0;"><strong>Marital Status</strong></td>
-                                              <td style="padding: 10px 0;">Single</td>
+                                              <td><strong>Marital Status</strong></td>
+                                              <td><?php echo $profile['marital_status']; ?></td>
                                             </tr>
                                             <tr>
-                                              <td style="padding: 10px 0;"><strong>Functional Area</strong></td>
-                                              <td style="padding: 10px 0;">Information Technology </td>
+                                              <td><strong>Functional Area</strong></td>
+                                              <td><?php echo $profile['functional_area']; ?></td>
                                             </tr>
                                             <tr>
-                                              <td style="padding: 10px 0;"><strong>Industry</strong></td>
-                                              <td style="padding: 10px 0;">Advertising/PR </td>
+                                              <td><strong>Industry</strong></td>
+                                              <td><?php echo $profile['industry']; ?></td>
                                             </tr>
                                             <tr>
-                                              <td style="padding: 10px 0;"><strong>Career Level</strong></td>
-                                              <td style="padding: 10px 0;">Experienced Professional</td>
+                                              <td><strong>Career Level</strong></td>
+                                              <td><?php echo $profile['career_level']; ?></td>
                                             </tr>
                                             <tr>
-                                              <td style="padding: 10px 0;"><strong>Current Salary</strong></td>
-                                              <td style="padding: 10px 0;">6,000 </td>
+                                              <td><strong>Current Salary</strong></td>
+                                              <td><?php echo $profile['current_salary'] . " " . $profile['salary_currency']; ?></td>
                                             </tr>
                                             <tr>
-                                              <td style="padding: 10px 0;"><strong>Expected Salary</strong></td>
-                                              <td style="padding: 10px 0;">10,000 </td>
+                                              <td><strong>Expected Salary</strong></td>
+                                              <td><?php echo $profile['expected_salary'] . " " . $profile['salary_currency']; ?></td>
                                             </tr>
                                             <tr>
-                                              <td style="padding: 10px 0;"><strong>Nationality</strong> </td>
-                                              <td style="padding: 10px 0;">Americans</td>
-                                            </tr>
-
-                                            <tr>
-                                              <td style="padding: 7px 0;"></td>
-                                              <td style="padding: 7px 0;"></td>
+                                              <td><strong>Nationality</strong></td>
+                                              <td><?php echo $profile['nationality']; ?></td>
                                             </tr>
                                           </tbody>
                                         </table>
                                       </td>
                                     </tr>
+
+                                    <!-- my_profile.php ended -->
 
                                     <tr>
                                       <td height="30">
@@ -183,28 +218,38 @@
 
                                         <div id="skill_div">
                                           <ul class="profileskills">
-                                            <li id="skill_53">
-                                              <div class="skillbox">Adobe Photoshop
-                                                <span class="text text-success">14 Years</span>
-                                              </div>
-                                            </li>
-                                            <li id="skill_54">
-                                              <div class="skillbox">Adobe Illustrator
-                                                <span class="text text-success">9 years</span>
-                                              </div>
-                                            </li>
-                                            <li id="skill_55">
-                                              <div class="skillbox">HTML
-                                                <span class="text text-success">14 Years</span>
-                                              </div>
-                                            </li>
-                                            <li id="skill_56">
-                                              <div class="skillbox">CSS
-                                                <span class="text text-success">13 Years</span>
-                                              </div>
-                                            </li>
+                                            <?php
+                 
+
+                                            $user_id = isset($_SESSION['user_id']) ? intval($_SESSION['user_id']) : 0;
+
+                                            $sql = "SELECT * FROM job_seeker_skills WHERE user_id='$user_id' ORDER BY id DESC";
+                                            $result = mysqli_query($conn, $sql);
+
+                                            if ($result && mysqli_num_rows($result) > 0) {
+                                              while ($row = mysqli_fetch_assoc($result)) {
+                                                $skill_id = (int)$row['id'];
+                                                $skill = htmlspecialchars($row['job_skill']);
+                                                $experience = htmlspecialchars($row['job_experience']);
+                                            ?>
+
+                                                <li id="skill_<?php echo $skill_id; ?>">
+                                                  <div class="skillbox">
+                                                    <?php echo $skill; ?>
+                                                    <span class="text text-success"><?php echo $experience; ?></span>
+                                                    
+                                                  </div>
+                                                </li>
+
+                                            <?php
+                                              }
+                                            } else {
+                                              echo '<li><div class="skillbox text-center">No skills added yet.</div></li>';
+                                            }
+                                            ?>
                                           </ul>
                                         </div>
+
                                       </td>
                                     </tr>
 
@@ -253,15 +298,57 @@
                                         <h2 style="font-size: 22px; color: #000; border-bottom: 2px solid #000; margin-top: 0;">
                                           <span style="display:inline-block; color:#44546c; padding:10px 0">Experience</span>
                                         </h2>
+                                        <!-- experience -->
                                         <div class="" id="experience_div">
                                           <ul class="experienceList">
                                             <li><span class="exdot"></span>
-                                              <div class="expbox">
-                                                <h4>UI UX Designer</h4>
-                                                <div class="excity"><i class="fas fa-map-marker-alt"></i>Maltahohe - Namibia</div>
-                                                <div class="expcomp"><i class="fas fa-building"></i>Amoka Int</div>
-                                                <div class="expcomp"><i class="fas fa-calendar-alt"></i>From 13 Dec, 2009 - 07 Feb, 2012</div>
-                                                <p>This is just for testing experience details</p>
+                                              <div class="card-body">
+                                                <?php
+                                                $user_id = $_SESSION['user_id'];
+
+                                                $sql = "
+                                                    SELECT id, title, company, country, state, city, date_start, date_end, is_currently_working, description
+                                                    FROM job_seeker_experiences
+                                                    WHERE user_id = '$user_id'
+                                                    ORDER BY id DESC
+                                                ";
+
+                                                $query = mysqli_query($conn, $sql);
+
+                                                if (!$query) {
+                                                  die("SQL Error: " . mysqli_error($conn));
+                                                }
+
+                                                if (mysqli_num_rows($query) > 0) {
+                                                  while ($row = mysqli_fetch_assoc($query)) {
+                                                    $exp_id = $row['id'];
+                                                    $title = htmlspecialchars($row['title']);
+                                                    $company = htmlspecialchars($row['company']);
+                                                    $city = htmlspecialchars($row['city']);   // abhi id hi aayegi
+                                                    $country = htmlspecialchars($row['country']); // abhi id hi aayegi
+                                                    $date_start = !empty($row['date_start']) ? date('d M, Y', strtotime($row['date_start'])) : '';
+                                                    $date_end = ($row['is_currently_working'] == 1) ? 'Currently working' : (!empty($row['date_end']) ? date('d M, Y', strtotime($row['date_end'])) : '');
+                                                    $description = nl2br(htmlspecialchars($row['description']));
+                                                ?>
+
+                                                    <div class="expbox" id="experience_<?php echo $exp_id; ?>">
+                                                      <div class="d-flex">
+                                                        <h4><?php echo $title; ?></h4>
+
+                                                      </div>
+
+                                                      <div class="excity mb-2"><i class="fas fa-map-marker-alt me-2"></i> <?php echo "$city - $country"; ?></div>
+                                                      <div class="expcomp fw-bold mb-2"><i class="fas fa-building me-2"></i> <?php echo $company; ?></div>
+                                                      <div class="expcomp fw-bold mb-2"><i class="fas fa-calendar-alt me-2"></i> From <?php echo $date_start; ?> - <?php echo $date_end; ?></div>
+                                                      <p><?php echo $description; ?></p>
+                                                    </div>
+
+                                                <?php
+                                                  }
+                                                } else {
+                                                  echo '<div class="text-center">No Experience Added Yet</div>';
+                                                }
+                                                ?>
                                               </div>
                                             </li>
                                           </ul>
@@ -276,15 +363,53 @@
                                         <h2 style="font-size: 22px; color: #000; border-bottom: 2px solid #000; margin-top: 0;">
                                           <span style="display:inline-block; color:#44546c; padding:10px 0">Education</span>
                                         </h2>
+                                        <!-- education -->
                                         <div class="" id="education_div">
                                           <ul class="educationList">
                                             <li><span class="exdot"></span>
-                                              <div class="expbox">
-                                                <h4>Matriculation/O-Level - Matric in Science</h4>
-                                                <div class="date">2005 - Palmerston North - New Zealand</div>
-                                                <div class="expcomp"><i class="fas fa-graduation-cap"></i>Matric</div>
-                                                <div class="expcomp"><i class="fas fa-school"></i>Govt School</div>
-                                                <div class="expcomp"><i class="fas fa-book"></i>Biological Sciences, General Mathematics, Physics</div>
+                                              <div class="card-body">
+                                                <?php
+                                                $user_id = $_SESSION['user_id'];
+
+                                                $sql = "SELECT id, user_id, degree_level_id, degree_type_id, degree_title, major_subjects, country_id, state_id, city_id, institution, date_completion, degree_result, result_type_id, created_at 
+                                                FROM job_seeker_education 
+                                                WHERE user_id = '$user_id' 
+                                                ORDER BY id DESC";
+
+                                                $query = mysqli_query($conn, $sql);
+
+                                                // Debug agar query fail ho
+                                                if (!$query) {
+                                                  die("SQL Error in Education Section: " . mysqli_error($conn) . " | Query: " . $sql);
+                                                }
+                                                ?>
+
+                                                <div id="education_div">
+                                                  <?php if (mysqli_num_rows($query) > 0): ?>
+                                                    <ul class="educationList">
+                                                      <?php while ($row = mysqli_fetch_assoc($query)): ?>
+                                                        <li>
+                                                          <span class="exdot"></span>
+                                                          <div class="expbox" id="education_<?php echo $row['id']; ?>">
+                                                            <div class="d-flex">
+                                                              <h4>
+                                                                <?php echo htmlspecialchars($row['degree_level_id']); ?> -
+                                                                <?php echo htmlspecialchars($row['degree_title']); ?>
+                                                              </h4>
+
+                                                            </div>
+                                                            <div class="date"><?php echo $row['date_completion']; ?> - <?php echo $row['city_id']; ?> - <?php echo $row['country_id']; ?></div>
+                                                            <div class="expcomp"><i class="fas fa-graduation-cap"></i> <?php echo $row['degree_type_id']; ?></div>
+                                                            <div class="expcomp"><i class="fas fa-map-marker-alt"></i> <?php echo $row['city_id']; ?> - <?php echo $row['country_id']; ?></div>
+                                                            <div class="expcomp"><i class="fas fa-school"></i> <?php echo $row['institution']; ?></div>
+                                                          </div>
+                                                        </li>
+                                                      <?php endwhile; ?>
+                                                    </ul>
+                                                  <?php else: ?>
+                                                    <div class="text-center text-muted">No Education Added Yet</div>
+                                                  <?php endif; ?>
+                                                </div>
                                               </div>
                                             </li>
                                           </ul>
@@ -300,21 +425,37 @@
                                           <span style="display:inline-block; color:#44546c; padding:10px 0">Languages</span>
                                         </h2>
                                         <div id="language_div">
-                                          <div class="profilelang">
-                                            <div class="langbox" id="language_34">
-                                              <h5>Urdu</h5>
-                                              <p>Expert</p>
-                                            </div>
-                                            <div class="langbox" id="language_35">
-                                              <h5>English</h5>
-                                              <p>Expert</p>
-                                            </div>
-                                            <div class="langbox" id="language_36">
-                                              <h5>Arabic</h5>
-                                              <p>Intermediate</p>
-                                            </div>
+                                          <div class="profilelang d-flex flex-wrap mt-3">
+                                            <?php
+
+
+                                            $user_id = isset($_SESSION['user_id']) ? intval($_SESSION['user_id']) : 0;
+
+                                            $sql = "SELECT * FROM job_seeker_languages WHERE user_id = '$user_id' ORDER BY id DESC";
+                                            $result = mysqli_query($conn, $sql);
+
+                                            if ($result && mysqli_num_rows($result) > 0) {
+                                              while ($row = mysqli_fetch_assoc($result)) {
+                                                $lang_id = (int)$row['id'];
+                                                $language = htmlspecialchars($row['language']);
+                                                $level = htmlspecialchars($row['language_level']);
+                                            ?>
+
+                                                <div class="langbox bg-light p-2 me-4 border rounded" id="language_<?php echo $lang_id; ?>">
+                                                  <h5><?php echo $language; ?></h5>
+                                                  <p><?php echo $level; ?></p>
+
+                                                </div>
+
+                                            <?php
+                                              }
+                                            } else {
+                                              echo '<p class="text-center">No languages added yet.</p>';
+                                            }
+                                            ?>
                                           </div>
                                         </div>
+
                                       </td>
                                     </tr>
                                     <tr>

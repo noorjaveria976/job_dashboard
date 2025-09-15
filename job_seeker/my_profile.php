@@ -1,6 +1,8 @@
 <?php
 session_start();
 include 'include/config.php';
+// Logged in user ka ID
+$user_id = $_SESSION['user_id'] ?? 0;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -41,21 +43,31 @@ include 'include/config.php';
                                     }
                                 </script>
                                 <!-- Personal Information -->
+                                <?php
+                               
+                                // Fetch existing profile data
+                                $profile = mysqli_query($conn, "SELECT * FROM job_seeker_profiles WHERE user_id='$user_id' LIMIT 1");
+                                $data = mysqli_fetch_assoc($profile);
+                                ?>
+
                                 <form method="POST" action="save_profile_sql.php" accept-charset="UTF-8" class="form" enctype="multipart/form-data">
 
+                                    <input type="hidden" name="user_id" value="<?= $user_id ?>">
 
                                     <h5>Account Information</h5>
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <div class="formrow ">
-                                                <label for="">Email</label>
-                                                <input class="form-control" id="email" placeholder="Email" name="email" type="text">
+                                            <div class="formrow">
+                                                <label>Email</label>
+                                                <input class="form-control" id="email" name="email" type="text"
+                                                    value="<?= htmlspecialchars($data['email'] ?? '') ?>" placeholder="Email">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <div class="formrow ">
-                                                <label for="">Password</label>
-                                                <input class="form-control" id="password" placeholder="Password" name="password" type="password">
+                                            <div class="formrow">
+                                                <label>Password</label>
+                                                <input class="form-control" id="password" name="password" type="password"
+                                                    value="<?= htmlspecialchars($data['password'] ?? '') ?>" placeholder="Password">
                                             </div>
                                         </div>
                                     </div>
@@ -63,315 +75,179 @@ include 'include/config.php';
                                     <hr>
 
                                     <h5>Personal Information</h5>
-
                                     <div class="row p-2 g-1">
-                                        <div class="col-md-6 pe-3"><?php
-                                                                    // Profile fetch karo
-                                                                    $user_id = $_SESSION['user_id'] ?? 0;
-                                                                    $profile = mysqli_query($conn, "SELECT * FROM job_seeker_profiles WHERE user_id='$user_id'");
-                                                                    $data = mysqli_fetch_assoc($profile);
-                                                                    ?>
+                                        <div class="col-md-6 pe-3">
                                             <div class="userimgupbox bg-white p-5">
-                                                <div class="imagearea text-center" style="min-height: 122px;">
-                                                    <label class="d-block mb-1 fw-semibold text-dark">Profile Image <span>*</span></label>
-                                                    <!-- Profile Image -->
-                                                    <img src="uploads/profile/<?php echo $data['profile_image'] ?? 'default.png'; ?>"
+                                                <div class="imagearea text-center">
+                                                    <label class="fw-semibold">Profile Image <span>*</span></label>
+                                                    <img src="uploads/profile/<?= $data['profile_image'] ?? 'default.png' ?>"
                                                         style="max-width:100px; max-height:100px;" alt="Profile">
                                                 </div>
                                                 <div class="formrow">
-                                                    <div id="thumbnail"></div>
-                                                    <label class="btn btn-light bg-transparent btn-default mt-1 w-100 p-2 text-uppercase " style="border: 2px dashed #ccc;"><i class="fas fa-upload fw-black"></i> Select Profile Image
-                                                        <input type="file" name="image" id="image" style="display: none;">
+                                                    <label class="btn btn-light bg-transparent w-100 p-2 text-uppercase"
+                                                        style="border: 2px dashed #ccc;">
+                                                        <i class="fas fa-upload"></i> Select Profile Image
+                                                        <input type="file" name="image" id="image" style="display:none;">
                                                     </label>
-
                                                 </div>
                                             </div>
-
-
                                         </div>
+
                                         <div class="col-md-6 ps-4">
                                             <div class="userimgupbox bg-white p-5">
-                                                <div class="imagearea text-center" style="min-height: 122px;">
-                                                    <label class="d-block mb-1 fw-semibold text-dark">Cover Photo</label>
-                                                    <!-- Cover Image -->
-                                                    <img src="uploads/cover/<?php echo $data['cover_image'] ?? 'default_cover.png'; ?>"
+                                                <div class="imagearea text-center">
+                                                    <label class="fw-semibold">Cover Photo</label>
+                                                    <img src="uploads/cover/<?= $data['cover_images'] ?? 'default_cover.png' ?>"
                                                         style="max-width:200px; max-height:90px;" alt="Cover">
                                                 </div>
                                                 <div class="formrow">
-                                                    <div id="thumbnail_cover_image"></div>
-                                                    <label class="btn btn-light bg-transparent mt-1 w-100 p-2 text-uppercase" style="border: 2px dashed #ccc;"><i class="fas fa-upload"></i> Select Cover Photo
-                                                        <input type="file" name="cover_image" id="cover_image" style="display: none;">
+                                                    <label class="btn btn-light bg-transparent w-100 p-2 text-uppercase"
+                                                        style="border: 2px dashed #ccc;">
+                                                        <i class="fas fa-upload"></i> Select Cover Photo
+                                                        <input type="file" name="cover_image" id="cover_image" style="display:none;">
                                                     </label>
-
                                                 </div>
                                             </div>
                                         </div>
-
                                     </div>
 
-                                    <div class="row">
+                                    <div class="row mt-3">
                                         <div class="col-md-6">
-                                            <div class="formrow mb-3">
-                                                <label class="mb-0" for="">First Name <span>*</span></label>
-                                                <input class="form-control" id="first_name" placeholder="First Name" name="first_name" type="text">
-                                            </div>
+                                            <label>First Name <span>*</span></label>
+                                            <input class="form-control" name="first_name" type="text"
+                                                value="<?= htmlspecialchars($data['first_name'] ?? '') ?>" placeholder="First Name">
                                         </div>
-
                                         <div class="col-md-6">
-                                            <div class="formrow mb-3">
-                                                <label class="mb-0" for="">Last Name <span>*</span></label>
-                                                <input class="form-control" id="last_name" placeholder="Last Name" name="last_name" type="text">
-                                            </div>
+                                            <label>Last Name <span>*</span></label>
+                                            <input class="form-control" name="last_name" type="text"
+                                                value="<?= htmlspecialchars($data['last_name'] ?? '') ?>" placeholder="Last Name">
                                         </div>
                                         <div class="col-md-4">
-                                            <div class="formrow mb-3">
-                                                <label class="mb-0" for="">Nick Name</label>
-                                                <input class="form-control" id="middle_name" placeholder="Middle Name" name="middle_name" type="text">
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-4">
-                                            <div class="formrow mb-3">
-                                                <label class="mb-0" for="">Gender <span>*</span></label>
-                                                <select class="form-control" id="gender" name="gender">
-                                                    <option value="">Select Gender</option>
-                                                    <option value="Female">Female</option>
-                                                    <option value="Male" selected="selected">Male</option>
-
-                                                </select>
-                                            </div>
+                                            <label>Nick Name</label>
+                                            <input class="form-control" name="middle_name" type="text"
+                                                value="<?= htmlspecialchars($data['middle_name'] ?? '') ?>" placeholder="Nick Name">
                                         </div>
                                         <div class="col-md-4">
-                                            <div class="formrow mb-3">
-                                                <label class="mb-0" for="">Martial Status <span>*</span></label>
-                                                <select class="form-control" id="marital_status" name="marital_status">
-                                                    <option value="">Select Marital Status</option>
-                                                    <option value="Divorced">Divorced</option>
-                                                    <option value="Married">Married</option>
-                                                    <option value="Separated">Separated</option>
-                                                    <option value="Single" selected="selected">Single</option>
-                                                    <option value="Widow/er">Widow/er</option>
-                                                </select>
-                                            </div>
+                                            <label>Gender <span>*</span></label>
+                                            <select class="form-control" name="gender">
+                                                <option value="">Select Gender</option>
+                                                <option value="Male" <?= ($data['gender'] ?? '') == 'Male' ? 'selected' : '' ?>>Male</option>
+                                                <option value="Female" <?= ($data['gender'] ?? '') == 'Female' ? 'selected' : '' ?>>Female</option>
+                                            </select>
                                         </div>
-                                        <!-- first start -->
+                                        <div class="col-md-4">
+                                            <label>Marital Status <span>*</span></label>
+                                            <select class="form-control" name="marital_status">
+                                                <option value="">Select</option>
+                                                <option value="Single" <?= ($data['marital_status'] ?? '') == 'Single' ? 'selected' : '' ?>>Single</option>
+                                                <option value="Married" <?= ($data['marital_status'] ?? '') == 'Married' ? 'selected' : '' ?>>Married</option>
+                                                <option value="Divorced" <?= ($data['marital_status'] ?? '') == 'Divorced' ? 'selected' : '' ?>>Divorced</option>
+                                                <option value="Widow/er" <?= ($data['marital_status'] ?? '') == 'Widow/er' ? 'selected' : '' ?>>Widow/er</option>
+                                            </select>
+                                        </div>
                                         <div class="col-md-6">
-                                            <div class="formrow mb-3">
-                                                <label class="mb-0" for="">Country <span>*</span></label>
-                                                <select class="form-control" id="country" name="country">
-                                                    <option value="">Select Country</option>
-                                                    <option value="Afghanistan">Afghanistan</option>
-                                                    <option value="Albania">Albania</option>
-
-                                                </select>
-                                            </div>
+                                            <label>Country</label>
+                                            <input class="form-control" name="country" type="text"
+                                                value="<?= htmlspecialchars($data['country'] ?? '') ?>" placeholder="Country">
                                         </div>
-                                        <!-- first -->
-                                        <!-- second start -->
                                         <div class="col-md-3">
-                                            <div class="formrow mb-3">
-                                                <label class="mb-0" for="">State <span>*</span></label>
-                                                <span id="state_dd"><select id="state" class="form-control" name="state">
-                                                        <option value="">Select State</option>
-                                                        <option value="Alabama">Alabama</option>
-                                                        <option value="Alaska">Alaska</option>
-                                                        <option value="Arizona">Arizona</option>
-
-                                                    </select></span>
-                                            </div>
+                                            <label>State</label>
+                                            <input class="form-control" name="state" type="text"
+                                                value="<?= htmlspecialchars($data['state'] ?? '') ?>" placeholder="State">
                                         </div>
-                                        <!-- second -->
-                                        <!-- third start -->
                                         <div class="col-md-3">
-                                            <div class="formrow mb-3">
-                                                <label class="mb-0" for="">City <span>*</span></label>
-                                                <span id="city_dd"><select id="city" class="form-control" name="city">
-                                                        <option value="">Select City</option>
-                                                        <option value="Aberdeen">Aberdeen</option>
-                                                        <option value="Airway Heights">Airway Heights</option>
-                                                        <option value="Alderwood Manor">Alderwood Manor</option>
-
-                                                    </select></span>
-                                            </div>
-                                        </div>
-                                        <!-- third -->
-                                        <!-- four start -->
-                                        <div class="col-md-6">
-                                            <div class="formrow mb-3">
-                                                <label class="mb-0" for="">Nationality <span>*</span></label>
-                                                <select class="form-control" id="nationality" name="nationality">
-                                                    <option value="">Select Nationality</option>
-                                                    <option value="British">British</option>
-                                                    <option value="Americans" selected="selected">Americans</option>
-                                                    <option value="Afghans">Afghans</option>
-                                                    <option value="Albanians">Albanians</option>
-
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <!-- four end -->
-                                        <div class="col-md-6">
-
-
-                                            <div class="formrow ">
-                                                <label for="">Date of Birth <span>*</span></label>
-                                                <input class="form-control" id="date_of_birth" placeholder="Date of Birth" autocomplete="off" name="date_of_birth" type="date" value="1989-06-09">
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-6">
-                                            <div class="formrow mb-3">
-                                                <label class="mb-0" for="">Phone <span>*</span></label>
-                                                <input class="form-control" id="phone" placeholder="Phone" name="phone" type="text">
-                                            </div>
+                                            <label>City</label>
+                                            <input class="form-control" name="city" type="text"
+                                                value="<?= htmlspecialchars($data['city'] ?? '') ?>" placeholder="City">
                                         </div>
                                         <div class="col-md-6">
-                                            <div class="formrow mb-3">
-                                                <label class="mb-0" for="">Mobile</label>
-                                                <input class="form-control" id="mobile_num" placeholder="Mobile Number" name="mobile_num" type="text">
-                                            </div>
+                                            <label>Nationality</label>
+                                            <input class="form-control" name="nationality" type="text"
+                                                value="<?= htmlspecialchars($data['nationality'] ?? '') ?>" placeholder="Nationality">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label>Date of Birth</label>
+                                            <input class="form-control" name="date_of_birth" type="date"
+                                                value="<?= htmlspecialchars($data['date_of_birth'] ?? '') ?>">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label>Phone</label>
+                                            <input class="form-control" name="phone" type="text"
+                                                value="<?= htmlspecialchars($data['phone'] ?? '') ?>" placeholder="Phone">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label>Mobile</label>
+                                            <input class="form-control" name="mobile_num" type="text"
+                                                value="<?= htmlspecialchars($data['mobile_num'] ?? '') ?>" placeholder="Mobile">
                                         </div>
                                         <div class="col-md-12">
-                                            <div class="formrow mb-3">
-                                                <label class="mb-0" for="">Street Address <span>*</span></label>
-                                                <textarea class="form-control" id="street_address" placeholder="Street Address" name="street_address" cols="50" rows="10">Dummy Street Address 123 USA</textarea>
-                                            </div>
+                                            <label>Street Address</label>
+                                            <textarea class="form-control" name="street_address" rows="3"
+                                                placeholder="Street Address"><?= htmlspecialchars($data['street_address'] ?? '') ?></textarea>
                                         </div>
-
                                     </div>
 
                                     <hr>
-                                    <!-- <h5>Add Video Profile</h5>
-
-                                    <div class="row">
-                                        <div class="col-md-12" id="video_link_id">
-                                            <div class="formrow ">
-                                                <label for="">Video Link - sample: https://www.youtube.com/embed/538cRSPrwZU</label>
-                                                <textarea class="form-control" id="video_link" placeholder="Video Link" name="video_link" cols="50" rows="10">https://www.youtube.com/embed/538cRSPrwZU</textarea>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <hr> -->
-
                                     <h5>Career Information</h5>
-
                                     <div class="row">
-                                        <!-- five start -->
                                         <div class="col-md-6">
-                                            <div class="formrow mb-3">
-                                                <label class="mb-0" for="">Job Experience <span>*</span></label>
-                                                <select class="form-control" id="job_experience" name="job_experience">
-                                                    <option value="">Select Experience</option>
-                                                    <option value="Fresh">Fresh</option>
-                                                    <option value="Less Than 1 Year">Less Than 1 Year</option>
-                                                    <option value="1 Year">1 Year</option>
-                                                    <option value="2 years">2 years</option>
-
-                                                </select>
-                                            </div>
+                                            <label>Job Experience</label>
+                                            <input class="form-control" name="job_experience" type="text"
+                                                value="<?= htmlspecialchars($data['job_experience'] ?? '') ?>" placeholder="Job Experience">
                                         </div>
-                                        <!-- five -->
                                         <div class="col-md-6">
-                                            <div class="formrow mb-3">
-                                                <label class="mb-0" for="">Career Level <span>*</span></label>
-                                                <select class="form-control" id="career_level" name="career_level">
-                                                    <option value="">Select Career Level</option>
-                                                    <option value="Department Head">Department Head</option>
-                                                    <option value="Entry Level">Entry Level</option>
-                                                    <option value="Experienced Professional">Experienced Professional</option>
-                                                    <option value="GM / CEO / Country Head / President">GM / CEO / Country Head / President</option>
-                                                    <option value="Intern/Student">Intern/Student</option>
-
-                                                </select>
-                                            </div>
+                                            <label>Career Level</label>
+                                            <input class="form-control" name="career_level" type="text"
+                                                value="<?= htmlspecialchars($data['career_level'] ?? '') ?>" placeholder="Career Level">
                                         </div>
-                                        <!-- six start -->
                                         <div class="col-md-6">
-                                            <div class="formrow mb-3">
-                                                <label class="mb-0" for="">Select Industry <span>*</span></label>
-                                                <select class="form-control" id="industry" name="industry">
-                                                    <option value="">Select Industry</option>
-                                                    <option value="Accounting/Taxation">Accounting/Taxation</option>
-                                                    <option value="Advertising/PR">Advertising/PR</option>
-                                                    <option value="Agriculture/Fertilizer/Pesticide">Agriculture/Fertilizer/Pesticide</option>
-
-                                                </select>
-                                            </div>
+                                            <label>Industry</label>
+                                            <input class="form-control" name="industry" type="text"
+                                                value="<?= htmlspecialchars($data['industry'] ?? '') ?>" placeholder="Industry">
                                         </div>
-                                        <!-- six -->
-                                        <!-- seven start -->
                                         <div class="col-md-6">
-                                            <div class="formrow mb-3">
-                                                <label class="mb-0" for="">Functional Area <span>*</span></label>
-                                                <select class="form-control" id="functional_area" name="functional_area">
-                                                    <option value="">Select Functional Area</option>
-                                                    <option value="Other">Other</option>
-
-                                                    <option value="Information Technology">Information Technology</option>
-                                                    <option value="Management and Manufacturing">Management and Manufacturing</option>
-
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <!-- seven end -->
-                                        <div class="col-md-4">
-                                            <div class="formrow mb-3">
-                                                <label class="mb-0" for="">Salary Currency</label>
-                                                <input class="form-control" id="salary_currency" placeholder="Salary Currency" autocomplete="off" name="salary_currency" type="text" value="USD">
-
-                                            </div>
+                                            <label>Functional Area</label>
+                                            <input class="form-control" name="functional_area" type="text"
+                                                value="<?= htmlspecialchars($data['functional_area'] ?? '') ?>" placeholder="Functional Area">
                                         </div>
                                         <div class="col-md-4">
-                                            <div class="formrow mb-3">
-                                                <label class="mb-0" for="">Current Salary <span>*</span></label>
-                                                <div class="input-group">
-
-                                                    <input class="form-control" id="current_salary" placeholder="Current Salary" name="current_salary" type="text">
-                                                </div>
-                                            </div>
+                                            <label>Salary Currency</label>
+                                            <input class="form-control" name="salary_currency" type="text"
+                                                value="<?= htmlspecialchars($data['salary_currency'] ?? '') ?>" placeholder="Currency">
                                         </div>
                                         <div class="col-md-4">
-                                            <div class="formrow mb-3">
-                                                <label class="mb-0" for="">Expected Salary <span>*</span></label>
-
-                                                <div class="input-group">
-
-                                                    <input class="form-control" id="expected_salary" placeholder="Expected Salary" name="expected_salary" type="text">
-                                                </div>
-
-                                            </div>
+                                            <label>Current Salary</label>
+                                            <input class="form-control" name="current_salary" type="text"
+                                                value="<?= htmlspecialchars($data['current_salary'] ?? '') ?>" placeholder="Current Salary">
                                         </div>
-
+                                        <div class="col-md-4">
+                                            <label>Expected Salary</label>
+                                            <input class="form-control" name="expected_salary" type="text"
+                                                value="<?= htmlspecialchars($data['expected_salary'] ?? '') ?>" placeholder="Expected Salary">
+                                        </div>
                                     </div>
-                                    <!-- textarea -->
-                                    <div class="row">
+
+                                    <div class="row mt-3">
                                         <h5>Summary</h5>
                                         <div class="col-md-12">
-                                            <div class="form-group mb-3">
-                                                <textarea name="summary" class="form-control" id="summary" placeholder="Profile Summary" rows="5"
-                                                    style="resize: vertical; min-height:100px; max-height:500px;"></textarea>
-                                                <span class="help-block summary-error"></span>
-                                            </div>
+                                            <textarea class="form-control" name="summary" rows="5"
+                                                placeholder="Profile Summary"><?= htmlspecialchars($data['summary'] ?? '') ?></textarea>
                                         </div>
                                     </div>
 
-                                    <div class="row">
-
+                                    <div class="row mt-3">
                                         <div class="col-md-12">
-                                            <div class="formrow mb-3">
-                                                <input type="checkbox" name="is_subscribed">
+                                            <label>
+                                                <input type="checkbox" name="is_subscribed" <?= ($data['is_subscribed'] ?? 0) ? 'checked' : '' ?>>
                                                 Subscribe to Newsletter
-
-                                            </div>
+                                            </label>
                                         </div>
                                         <div class="col-md-12">
-                                            <div class="formrow"><button type="submit" class="btn btn-primary w-100 py-2 fs-6 fw-bold text-uppercase">Update Profile and Save <i class="fa fa-arrow-circle-right" aria-hidden="true"></i></button></div>
+                                            <button type="submit" class="btn btn-primary w-100">Update Profile and Save</button>
                                         </div>
                                     </div>
-
-
-
                                 </form>
+
 
 
 

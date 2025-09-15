@@ -156,10 +156,11 @@ include 'include/config.php'; // DB connection
                                                     <?php while ($row = mysqli_fetch_assoc($query)): ?>
                                                         <tr class="d-flex flex-column border rounded p-2 m-2" style="width:220px;">
                                                             <td class="mb-2 text-center">
-                                                                <img src="<?php echo htmlspecialchars($row['image']); ?>"
+                                                                <img src="uploads/projects/<?php echo htmlspecialchars($row['image']); ?>"
                                                                     alt="<?php echo htmlspecialchars($row['name']); ?>"
                                                                     title="<?php echo htmlspecialchars($row['name']); ?>"
-                                                                    style="max-width:120px;">
+                                                                    class="img-fluid">
+
                                                             </td>
                                                             <td>
                                                                 <strong><?php echo htmlspecialchars($row['name']); ?></strong><br>

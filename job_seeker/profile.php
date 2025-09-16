@@ -240,7 +240,9 @@ if ($user_id === 0) {
                                 </table>
                               </td>
                               <!-- my_profile.php ended -->
-
+<div class="rytguhjb">
+  xftfcgvhbjk
+</div>
                               <!-- RIGHT PANEL -->
                               <td width="500" valign="top" style="font-family:Arial, Helvetica, sans-serif; vertical-align: top;">
 

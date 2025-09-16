@@ -121,11 +121,11 @@ if ($user_id === 0) {
                                         <td>
                                           <h2 style="color:#fff;margin-bottom:5px;font-size:20px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.3);">Contact Details</h2>
 
-                                          <div style="color:#fff;font-size:16px;display:block;padding:10px;text-align:center;font-weight:700;">
+                                          <div style="color:#fff;font-size:16px;display:block;padding:10px;font-weight:700;">
                                             <i class="fa fa-phone"></i> <?php echo $profile['phone']; ?>
                                           </div>
 
-                                          <div style="color:#fff;font-size:16px;display:block;padding:10px;text-align:center;font-weight:700;">
+                                          <div style="color:#fff;font-size:16px;display:block;padding-left:10px;font-weight:700;">
                                             <i class="fas fa-mobile-alt"></i> <?php echo $profile['mobile_num']; ?>
                                           </div>
 

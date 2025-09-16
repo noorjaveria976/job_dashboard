@@ -1,16 +1,19 @@
 <?php
 session_start();
 include 'include/config.php';
-$user_id = $_SESSION['user_id'] ?? 0;
-if ($user_id == 0) {
-  die("User not logged in.");
+
+// Authentication
+$user_id = intval($_SESSION['user_id'] ?? 0);
+if ($user_id === 0) {
+  header("Location: login.php");
+  exit;
 }
 ?>
 <!DOCTYPE html>
 <html lang="en">
 
 
-<!-- blank.html  21 Nov 2019 03:54:41 GMT -->
+
 
 <head>
   <meta charset="UTF-8">
@@ -71,209 +74,175 @@ if ($user_id == 0) {
                 <div class="tab-content" id="myTabContent2">
                   <div class="tab-pane fade show active" id="home3" role="tabpanel" aria-labelledby="home-tab3">
                     <!-- first temp -->
+                    <?php
+
+
+                    // Fetch profile data
+                    $sql = "SELECT * FROM job_seeker_profiles WHERE user_id='$user_id' LIMIT 1";
+                    $result = mysqli_query($conn, $sql);
+                    $profile = mysqli_fetch_assoc($result);
+
+                    // Calculate Age
+                    $age = '';
+                    if (!empty($profile['date_of_birth'])) {
+                      $dob = $profile['date_of_birth'];
+                      $age = date_diff(date_create($dob), date_create('today'))->y . " Years";
+                    }
+
+                    // Profile Image
+                    $profileImg = !empty($profile['profile_image'])
+                      ? "uploads/profile/" . $profile['profile_image']
+                      : "uploads/profile/default.png";
+                    ?>
+
                     <div class="col-md-9 col-sm-8">
 
-                      <!-- 
-                      <div class="downloadbtn text-end mb-3">
-                        <button type="button" onclick="downloadPDF()" class="btn btn-primary"><i class="fas fa-download"></i> Download CV</button>
-                      </div> -->
-
-
-
-                      <div class="" id="printableArea">
+                      <div id="printableArea">
                         <table width="800" align="center" style="margin:0 auto;">
                           <tbody>
                             <tr>
+                              <!-- LEFT PANEL -->
                               <td width="300" bgcolor="#1e5395" style="font-family:Arial, Helvetica, sans-serif; color: #fff;">
                                 <table width="270" align="center" style="margin:0 auto;">
                                   <tbody>
-                                    <?php
 
+                                    <?php if ($profile): ?>
+                                      <!-- Profile Image -->
+                                      <tr>
+                                        <td>
+                                          <div class="usercvimg">
+                                            <img src="<?php echo $profileImg; ?>" alt="Job Seeker" title="Job Seeker" style="max-width:200px;">
+                                          </div>
+                                        </td>
+                                      </tr>
 
-                                    // fetch profile data
-                                    $sql = "SELECT * FROM job_seeker_profiles WHERE user_id='$user_id' LIMIT 1";
-                                    $result = mysqli_query($conn, $sql);
-                                    $profile = mysqli_fetch_assoc($result);
+                                      <!-- Contact Details -->
+                                      <tr>
+                                        <td>
+                                          <h2 style="color:#fff;margin-bottom:5px;font-size:20px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.3);">Contact Details</h2>
 
-                                    // agar data nahi mila
-                                    if (!$profile) {
-                                      echo "<p style='color:red; text-align:center;'>No profile data found.</p>";
-                                      exit;
-                                    }
+                                          <div style="color:#fff;font-size:16px;display:block;padding:10px;text-align:center;font-weight:700;">
+                                            <i class="fa fa-phone"></i> <?php echo $profile['phone']; ?>
+                                          </div>
 
-                                    // dob se age nikalna
-                                    $dob = $profile['date_of_birth'];
-                                    $age = '';
-                                    if (!empty($dob)) {
-                                      $age = date_diff(date_create($dob), date_create('today'))->y . " Years";
-                                    }
+                                          <div style="color:#fff;font-size:16px;display:block;padding:10px;text-align:center;font-weight:700;">
+                                            <i class="fas fa-mobile-alt"></i> <?php echo $profile['mobile_num']; ?>
+                                          </div>
 
-                                    // image paths
-                                    $profileImg = !empty($profile['profile_image']) ? "uploads/profile/" . $profile['profile_image'] : "uploads/profile/default.png";
-                                    ?>
-                                    <!-- CV Template -->
-                                    <tr>
-                                      <td width="270">
-                                        <div class="usercvimg">
-                                          <img src="<?php echo $profileImg; ?>" alt="Job Seeker" title="Job Seeker" style="max-width:200px;">
-                                        </div>
-                                      </td>
-                                    </tr>
+                                          <div style="color:#fff;font-size:16px;margin-top:10px;padding-left:10px;">
+                                            <i class="fas fa-envelope"></i> <?php echo $profile['email']; ?>
+                                          </div>
 
-                                    <tr>
-                                      <td>
-                                        <h2 style="color:#fff;margin-bottom:5px;font-size:20px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.3);">Contact Details</h2>
+                                          <p style="color:#fff;font-size:14px;margin-top:10px;padding-left:10px;">
+                                            <i class="fas fa-globe"></i>
+                                            <?php echo $profile['city'] . ", " . $profile['state'] . ", " . $profile['country']; ?>
+                                          </p>
 
-                                        <div style="color:#fff;font-size:16px;margin-top:0;display:inline-block;padding:10px;text-align:center;border-radius:40px;font-weight:700;">
-                                          <i class="fa fa-phone"></i> <?php echo $profile['phone']; ?>
-                                        </div>
+                                          <p style="color:#fff;font-size:14px;margin-top:10px;padding-left:10px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,0.3);">
+                                            <i class="fas fa-map-marker-alt"></i> <?php echo $profile['street_address']; ?>
+                                          </p>
+                                        </td>
+                                      </tr>
 
-                                        <div style="color:#fff;font-size:16px;margin-top:0;display:inline-block;padding:10px;text-align:center;border-radius:40px;font-weight:700;">
-                                          <i class="fas fa-mobile-alt"></i> <?php echo $profile['mobile_num']; ?>
-                                        </div>
+                                      <!-- Personal Details -->
+                                      <tr>
+                                        <td>
+                                          <h2 style="color:#fff;margin-bottom:5px;font-size:20px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.3);">Personal Details</h2>
+                                          <table width="270" align="center" style="font-size:14px;">
+                                            <tbody>
+                                              <tr>
+                                                <td><strong>D.O.B</strong></td>
+                                                <td><?php echo $profile['date_of_birth']; ?></td>
+                                              </tr>
+                                              <tr>
+                                                <td><strong>Age</strong></td>
+                                                <td><?php echo $age; ?></td>
+                                              </tr>
+                                              <tr>
+                                                <td><strong>Gender</strong></td>
+                                                <td><?php echo $profile['gender']; ?></td>
+                                              </tr>
+                                              <tr>
+                                                <td><strong>Marital Status</strong></td>
+                                                <td><?php echo $profile['marital_status']; ?></td>
+                                              </tr>
+                                              <tr>
+                                                <td><strong>Functional Area</strong></td>
+                                                <td><?php echo $profile['functional_area']; ?></td>
+                                              </tr>
+                                              <tr>
+                                                <td><strong>Industry</strong></td>
+                                                <td><?php echo $profile['industry']; ?></td>
+                                              </tr>
+                                              <tr>
+                                                <td><strong>Career Level</strong></td>
+                                                <td><?php echo $profile['career_level']; ?></td>
+                                              </tr>
+                                              <tr>
+                                                <td><strong>Current Salary</strong></td>
+                                                <td><?php echo $profile['current_salary'] . " " . $profile['salary_currency']; ?></td>
+                                              </tr>
+                                              <tr>
+                                                <td><strong>Expected Salary</strong></td>
+                                                <td><?php echo $profile['expected_salary'] . " " . $profile['salary_currency']; ?></td>
+                                              </tr>
+                                              <tr>
+                                                <td><strong>Nationality</strong></td>
+                                                <td><?php echo $profile['nationality']; ?></td>
+                                              </tr>
+                                            </tbody>
+                                          </table>
+                                        </td>
+                                      </tr>
 
-                                        <div style="color:#fff;font-size:16px;margin-top:10px;padding-left:10px;">
-                                          <i class="fas fa-envelope"></i> <?php echo $profile['email']; ?>
-                                        </div>
-
-                                        <p style="color:#fff;font-size:14px;margin-top:10px;padding-left:10px;">
-                                          <i class="fas fa-globe"></i> <?php echo $profile['city'] . ", " . $profile['state'] . ", " . $profile['country']; ?>
-                                        </p>
-
-                                        <p style="color:#fff;font-size:14px;margin-top:10px;padding-left:10px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,0.3);">
-                                          <i class="fas fa-map-marker-alt"></i> <?php echo $profile['street_address']; ?>
-                                        </p>
-
-                                        <div style="color:#fff;font-size:30px;text-align:center;text-transform:uppercase;border:1px solid #fff;padding:10px;font-weight:bold;margin-top:20px;">
-                                          <?php echo $profile['job_experience']; ?>
-                                        </div>
-                                        <p style="color:#fff;font-size:16px;text-align:center;margin-top:5px;letter-spacing:3px;margin-bottom:0;text-transform:uppercase;">Of experience</p>
-                                      </td>
-                                    </tr>
-
-                                    <tr>
-                                      <td height="20">&nbsp;</td>
-                                    </tr>
-
-                                    <tr>
-                                      <td>
-                                        <h2 style="color:#fff;margin-bottom:5px;font-size:20px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.3);">Personal Details</h2>
-                                      </td>
-                                    </tr>
-
-                                    <tr>
-                                      <td>
-                                        <table width="270" align="center" style="font-size:14px;">
-                                          <tbody>
-                                            <tr>
-                                              <td width="120" style="padding:10px 0;"><strong>D.O.B</strong></td>
-                                              <td style="padding:10px 0;"><?php echo $profile['date_of_birth']; ?></td>
-                                            </tr>
-                                            <tr>
-                                              <td><strong>Age</strong></td>
-                                              <td><?php echo $age; ?></td>
-                                            </tr>
-                                            <tr>
-                                              <td><strong>Gender</strong></td>
-                                              <td><?php echo $profile['gender']; ?></td>
-                                            </tr>
-                                            <tr>
-                                              <td><strong>Marital Status</strong></td>
-                                              <td><?php echo $profile['marital_status']; ?></td>
-                                            </tr>
-                                            <tr>
-                                              <td><strong>Functional Area</strong></td>
-                                              <td><?php echo $profile['functional_area']; ?></td>
-                                            </tr>
-                                            <tr>
-                                              <td><strong>Industry</strong></td>
-                                              <td><?php echo $profile['industry']; ?></td>
-                                            </tr>
-                                            <tr>
-                                              <td><strong>Career Level</strong></td>
-                                              <td><?php echo $profile['career_level']; ?></td>
-                                            </tr>
-                                            <tr>
-                                              <td><strong>Current Salary</strong></td>
-                                              <td><?php echo $profile['current_salary'] . " " . $profile['salary_currency']; ?></td>
-                                            </tr>
-                                            <tr>
-                                              <td><strong>Expected Salary</strong></td>
-                                              <td><?php echo $profile['expected_salary'] . " " . $profile['salary_currency']; ?></td>
-                                            </tr>
-                                            <tr>
-                                              <td><strong>Nationality</strong></td>
-                                              <td><?php echo $profile['nationality']; ?></td>
-                                            </tr>
-                                          </tbody>
-                                        </table>
-                                      </td>
-                                    </tr>
-
-                                    <!-- my_profile.php ended -->
-
-                                    <tr>
-                                      <td height="30">
-                                        <h2 style="color: #fff;margin-bottom:15px;font-size:20px; padding:10px 0; border-bottom: 1px solid rgba(255,255,255,0.3);">Key Skills</h2>
-
-                                        <div id="skill_div">
+                                      <!-- Skills -->
+                                      <tr>
+                                        <td>
+                                          <h2 style="color:#fff;margin-bottom:5px;font-size:20px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.3);">Key Skills</h2>
                                           <ul class="profileskills">
                                             <?php
-                 
-
-                                            $user_id = isset($_SESSION['user_id']) ? intval($_SESSION['user_id']) : 0;
-
-                                            $sql = "SELECT * FROM job_seeker_skills WHERE user_id='$user_id' ORDER BY id DESC";
-                                            $result = mysqli_query($conn, $sql);
-
-                                            if ($result && mysqli_num_rows($result) > 0) {
-                                              while ($row = mysqli_fetch_assoc($result)) {
-                                                $skill_id = (int)$row['id'];
-                                                $skill = htmlspecialchars($row['job_skill']);
-                                                $experience = htmlspecialchars($row['job_experience']);
-                                            ?>
-
-                                                <li id="skill_<?php echo $skill_id; ?>">
+                                            $skill_sql = "SELECT * FROM job_seeker_skills WHERE user_id='$user_id' ORDER BY id DESC";
+                                            $skill_query = mysqli_query($conn, $skill_sql);
+                                            if ($skill_query && mysqli_num_rows($skill_query) > 0):
+                                              while ($row = mysqli_fetch_assoc($skill_query)): ?>
+                                                <li>
                                                   <div class="skillbox">
-                                                    <?php echo $skill; ?>
-                                                    <span class="text text-success"><?php echo $experience; ?></span>
-                                                    
+                                                    <?php echo htmlspecialchars($row['job_skill']); ?>
+                                                    <span class="text text-success"><?php echo htmlspecialchars($row['job_experience']); ?></span>
                                                   </div>
                                                 </li>
-
-                                            <?php
-                                              }
-                                            } else {
-                                              echo '<li><div class="skillbox text-center">No skills added yet.</div></li>';
-                                            }
-                                            ?>
+                                              <?php endwhile;
+                                            else: ?>
+                                              <li>
+                                                <div class="skillbox text-center">No skills added yet.</div>
+                                              </li>
+                                            <?php endif; ?>
                                           </ul>
-                                        </div>
+                                        </td>
+                                      </tr>
+                                      <tr>
+                                        <td>
+                                          <div style="color: #fff000; font-size: 16px; text-align: center; margin-top: 10px; font-style: italic; font-weight: bold; border-top: 1px solid rgba(255,255,255,0.3); padding-top: 20px;"> Immediate Available For Work </div>
+                                        </td>
+                                      </tr>
+                                      <tr>
+                                        <td height="30">&nbsp;</td>
+                                      </tr>
+                                    <?php else: ?>
+                                      <tr>
+                                        <td>
+                                          <p style="color:red;text-align:center;">No profile data found. Please complete your profile.</p>
+                                        </td>
+                                      </tr>
+                                    <?php endif; ?>
 
-                                      </td>
-                                    </tr>
-
-
-
-                                    <tr>
-                                      <td>
-                                        <div style="color: #fff000; font-size: 16px; text-align: center; margin-top: 10px; font-style: italic; font-weight: bold; border-top: 1px solid rgba(255,255,255,0.3); padding-top: 20px;">
-
-                                          Immediate Available For Work
-                                        </div>
-
-
-
-                                      </td>
-                                    </tr>
-                                    <tr>
-                                      <td height="30">&nbsp;</td>
-                                    </tr>
                                   </tbody>
                                 </table>
                               </td>
-                              <td width="500" valign="top" style="font-family:Arial, Helvetica, sans-serif; vertical-align: top;">
+                              <!-- my_profile.php ended -->
 
+                              <!-- RIGHT PANEL -->
+                              <td width="500" valign="top" style="font-family:Arial, Helvetica, sans-serif; vertical-align: top;">
 
                                 <table width="500" align="center" style="font-size: 14px; margin:0 auto;">
                                   <tbody>
@@ -283,16 +252,25 @@ if ($user_id == 0) {
                                       </td>
                                     </tr>
 
-
+                                    <!-- Objective -->
                                     <tr>
-                                      <td style="padding-left:20px; padding-right:15px;">
-                                        <h2 style="font-size: 22px; color: #000; border-bottom: 2px solid #000; margin-top: 0; padding-top:15px;"><span style="display:inline-block;color:#44546c; padding:10px 0">Objective</span></h2>
-                                        <p style="font-size: 16px; line-height: 22px; color: #555;">Hello! I'm Sharjeel, A Passionate UI/UX Designer and Frontend Developer with a strong technical background. I bring innovation and attention to detail to create visually stunning, user-centric designs. Proactive and disciplined, I excel in ensuring maximum accessibility and elevating customer experiences throughout the development process. Let's redefine digital interactions together.</p>
+                                      <?php
+                                      // Fetch profile data
+                                      $res = mysqli_query($conn, "SELECT summary FROM job_seeker_profiles WHERE user_id = $user_id LIMIT 1");
+                                      if ($res && mysqli_num_rows($res) > 0) {
+                                        $row = mysqli_fetch_assoc($res);
+                                        $summary = trim($row['summary'] ?? '');
+                                      }
+                                      ?>
+                                      <td style="padding:20px;">
+                                        <h2 style="font-size: 22px; color: #000; border-bottom: 2px solid #000;">Objective</h2>
+                                        <p style="font-size: 16px; color: #555;">
+                                          <?php echo !empty($profile['summary']) ? htmlspecialchars($profile['summary']) : "No objective added yet."; ?>
+                                        </p>
                                       </td>
                                     </tr>
-                                    <tr>
-                                      <td height="20">&nbsp;</td>
-                                    </tr>
+
+                                    <!-- Experience -->
                                     <tr>
                                       <td style="padding-left:20px; padding-right:15px;">
                                         <h2 style="font-size: 22px; color: #000; border-bottom: 2px solid #000; margin-top: 0;">
@@ -355,9 +333,8 @@ if ($user_id == 0) {
                                         </div>
                                       </td>
                                     </tr>
-                                    <tr>
-                                      <td height="20">&nbsp;</td>
-                                    </tr>
+
+                                    <!-- Education -->
                                     <tr>
                                       <td style="padding-left:20px; padding-right:15px;">
                                         <h2 style="font-size: 22px; color: #000; border-bottom: 2px solid #000; margin-top: 0;">
@@ -416,9 +393,11 @@ if ($user_id == 0) {
                                         </div>
                                       </td>
                                     </tr>
+
                                     <tr>
                                       <td height="20">&nbsp;</td>
                                     </tr>
+                                    <!-- language -->
                                     <tr>
                                       <td style="padding-left:20px; padding-right:15px;">
                                         <h2 style="font-size: 22px; color: #000; border-bottom: 2px solid #000; margin-top: 0;">
@@ -461,29 +440,25 @@ if ($user_id == 0) {
                                     <tr>
                                       <td></td>
                                     </tr>
+
                                   </tbody>
                                 </table>
-
-
-
-
-
                               </td>
                             </tr>
                           </tbody>
                         </table>
-
                       </div>
 
                       <div class="text-center mt-5 mb-5">
-
-
                         <div class="downloadbtn">
-                          <button type="button" onclick="downloadPDF()" class="btn btn-primary"><i class="fas fa-download"></i> Download CV</button>
+                          <button type="button" onclick="downloadPDF()" class="btn btn-primary">
+                            <i class="fas fa-download"></i> Download CV
+                          </button>
                         </div>
-
                       </div>
+
                     </div>
+
 
                     <!-- first temp end -->
 
@@ -886,6 +861,6 @@ if ($user_id == 0) {
 </body>
 
 
-<!-- blank.html  21 Nov 2019 03:54:41 GMT -->
+
 
 </html>

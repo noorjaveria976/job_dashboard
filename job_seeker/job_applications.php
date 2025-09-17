@@ -61,7 +61,7 @@
                                                 <div class="col-md-4 col-sm-4">
                                                     <!-- download btn -->
                                                     <div class="d-flex justify-content-end mt-4">
-                                                        <a href="" class="btn btn-outline-primary py-2 px-4">
+                                                        <a href="view_jobs.php" class="btn btn-outline-primary py-2 px-4">
                                                             VIEW DETAILS
                                                         </a>
                                                     </div>

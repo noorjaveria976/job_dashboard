@@ -2410,7 +2410,7 @@
                                     <div class="ribbon ribbon-top-left"><span><i class="fas fa-star"></i> Featured</span></div>
 
                                     <div class="ltisusrinf">
-                                        <div class="userltimg"><img src="https://www.sharjeelanjum.com/demos/jobsportal-update/user_images/-1741437674-648.jpg" style="max-width=100px; max-height:100px;" alt="Arjun Karanath" title="Arjun Karanath"></div>
+                                        <div class="userltimg"><img src="https://www.sharjeelanjum.com/demos/jobsportal-update/user_images/-1741437674-648.jpg" style="max-width:100px; max-height:100px;" alt="Arjun Karanath" title="Arjun Karanath"></div>
                                     </div>
 
                                     <div class="hmseekerinfo">
@@ -2435,7 +2435,7 @@
                                     <div class="ribbon ribbon-top-left"><span><i class="fas fa-star"></i> Featured</span></div>
 
                                     <div class="ltisusrinf">
-                                        <div class="userltimg"><img src="https://www.sharjeelanjum.com/demos/jobsportal-update/user_images/-1741437768-832.jpg" style="max-width=100px; max-height:100px;" alt="Sophia Jason" title="Sophia Jason"></div>
+                                        <div class="userltimg"><img src="https://www.sharjeelanjum.com/demos/jobsportal-update/user_images/-1741437768-832.jpg" style="max-width:100px; max-height:100px;" alt="Sophia Jason" title="Sophia Jason"></div>
                                     </div>
 
                                     <div class="hmseekerinfo">
@@ -2460,7 +2460,7 @@
                                     <div class="ribbon ribbon-top-left"><span><i class="fas fa-star"></i> Featured</span></div>
 
                                     <div class="ltisusrinf">
-                                        <div class="userltimg"><img src="https://www.sharjeelanjum.com/demos/jobsportal-update/user_images/-1741437838-57.jpg" style="max-width=100px; max-height:100px;" alt="Liza Martin" title="Liza Martin"></div>
+                                        <div class="userltimg"><img src="https://www.sharjeelanjum.com/demos/jobsportal-update/user_images/-1741437838-57.jpg" style="max-width:100px; max-height:100px;" alt="Liza Martin" title="Liza Martin"></div>
                                     </div>
 
                                     <div class="hmseekerinfo">
@@ -2485,7 +2485,7 @@
                                     <div class="ribbon ribbon-top-left"><span><i class="fas fa-star"></i> Featured</span></div>
 
                                     <div class="ltisusrinf">
-                                        <div class="userltimg"><img src="https://www.sharjeelanjum.com/demos/jobsportal-update/user_images/-1741437874-596.jpg" style="max-width=100px; max-height:100px;" alt="Job Seeker" title="Job Seeker"></div>
+                                        <div class="userltimg"><img src="https://www.sharjeelanjum.com/demos/jobsportal-update/user_images/-1741437874-596.jpg" style="max-width:100px; max-height:100px;" alt="Job Seeker" title="Job Seeker"></div>
                                     </div>
 
                                     <div class="hmseekerinfo">
@@ -2510,7 +2510,7 @@
                                     <div class="ribbon ribbon-top-left"><span><i class="fas fa-star"></i> Featured</span></div>
 
                                     <div class="ltisusrinf">
-                                        <div class="userltimg"><img src="https://www.sharjeelanjum.com/demos/jobsportal-update/user_images/-1728188674-976.png" style="max-width=100px; max-height:100px;" alt="Sharjeel Anjum" title="Sharjeel Anjum"></div>
+                                        <div class="userltimg"><img src="https://www.sharjeelanjum.com/demos/jobsportal-update/user_images/-1728188674-976.png" style="max-width:100px; max-height:100px;" alt="Sharjeel Anjum" title="Sharjeel Anjum"></div>
                                     </div>
 
                                     <div class="hmseekerinfo">

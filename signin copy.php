@@ -13,18 +13,7 @@ if (isset($_POST['user_login_btn'])) {
         if (password_verify($password, $user['user_login_password'])) {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['user_name'] = $user['user_register_frist_name'];
-            $_SESSION['user_role'] = $user['role'];
-
-            // Redirect according to role
-            if ($user['role'] == 'job_seeker') {
-                header("Location: ./job_seeker/dashboard.php");
-            } elseif ($user['role'] == 'job_provider') {
-                header("Location: ./job_provider/dashboard.php");
-            } elseif ($user['role'] == 'job_admin') {
-                header("Location: ./job_admin/dashboard.php");
-            } else {
-                echo "<script>alert('Invalid role!');</script>";
-            }
+            header("Location:./job_seeker/dashboard.php");
             exit();
         } else {
             echo "<script>alert('Invalid Password!');</script>";
@@ -33,5 +22,4 @@ if (isset($_POST['user_login_btn'])) {
         echo "<script>alert('Email not found!');</script>";
     }
 }
-
 ?>

@@ -33,9 +33,8 @@ if (isset($_POST['user_register_btn'])) {
 
     $hashed_password = password_hash($password, PASSWORD_BCRYPT);
 
-    $sql = "INSERT INTO login (user_register_frist_name, user_register_last_name, user_login_email, user_login_password, role, created_at) 
-        VALUES ('$first_name', '$last_name', '$email', '$hashed_password', 'job_seeker', NOW())";
-
+    $sql = "INSERT INTO login (user_register_frist_name, user_register_last_name, user_login_email, user_login_password, created_at) 
+            VALUES ('$first_name', '$last_name', '$email', '$hashed_password', NOW())";
 
     if (mysqli_query($conn, $sql)) {
         // echo "<script>alert('Registration successful! Please login now.'); window.location='index.php';</script>";
